@@ -152,6 +152,8 @@ const passwordHash = require("./password-hash");
 
 const { Prometheus } = require("./prometheus");
 const { UptimeCalculator } = require("./uptime-calculator");
+const StackDowntime = require("./stack-downtime");
+let stopStackCheckpointing;
 
 const hostname = config.hostname;
 
@@ -1772,6 +1774,10 @@ let needSetup = false;
         process.exit(1);
     });
 
+    const recoveredChecks = await StackDowntime.recover(R.knex);
+    await UptimeCalculator.removeAll();
+    log.info("stack-downtime", `Recovered ${recoveredChecks} missed checks as DOWN`);
+    stopStackCheckpointing = StackDowntime.startCheckpointing(R.knex, (error) => log.error("stack-downtime", error));
     await server.start();
 
     server.httpServer.listen(port, hostname, async () => {
@@ -1990,6 +1996,9 @@ async function shutdownFunction(signal) {
         await monitor.stop();
     }
     await sleep(2000);
+    if (stopStackCheckpointing) {
+        await stopStackCheckpointing();
+    }
     await Database.close();
 
     if (EmbeddedMariaDB.hasInstance()) {
