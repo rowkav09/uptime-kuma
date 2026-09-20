@@ -267,8 +267,8 @@ class Maintenance extends BeanModel {
                 // Create Cron
                 if (this.strategy === "recurring-interval") {
                     // For recurring-interval, Croner needs to have interval and startAt
-                    const startDate = dayjs(this.startDate);
-                    const [hour, minute] = this.startTime.split(":");
+                    const startDate = dayjs(this.start_date);
+                    const [hour, minute] = (this.start_time || "00:00").split(":");
                     const startDateTime = startDate.hour(hour).minute(minute);
 
                     // Fix #6118, since the startDateTime is optional, it will throw error if the date is null when using toISOString()
@@ -284,12 +284,12 @@ class Maintenance extends BeanModel {
                             startAt,
                         },
                         () => {
-                            if (!this.lastStartDate || this.interval_day === 1) {
+                            if (!this.last_start_date || this.interval_day === 1) {
                                 return startEvent();
                             }
 
                             // If last start date is set, it means the maintenance has been started before
-                            let lastStartDate = dayjs(this.lastStartDate).subtract(1.1, "hour"); // Subtract 1.1 hour to avoid issues with timezone differences
+                            let lastStartDate = dayjs(this.last_start_date).subtract(1.1, "hour"); // Subtract 1.1 hour to avoid issues with timezone differences
 
                             // Check if the interval is enough
                             if (current.diff(lastStartDate, "day") < this.interval_day) {
