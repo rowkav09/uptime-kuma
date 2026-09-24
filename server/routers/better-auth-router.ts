@@ -6,23 +6,16 @@ import { log } from "../../src/util";
 
 // @ts-ignore
 import { allowDevOrigin } from "../util-server.js";
-import { RateLimiter } from "limiter";
+import rateLimit from "express-rate-limit";
 import { generalErrorResponse } from "../util2";
 
-const authRateLimiter = new RateLimiter({
-    tokensPerInterval: 20,
-    interval: "minute",
-    fireImmediately: true,
+const authLimiter = rateLimit({
+    windowMs: 60 * 1000,
+    max: 20,
+    standardHeaders: true,
+    legacyHeaders: false,
+    message: { ok: false, msg: "Too frequently, try again later." },
 });
-
-async function rateLimiterMiddleware(req: express.Request, res: express.Response, next: express.NextFunction) {
-    const remainingRequests = await authRateLimiter.removeTokens(1);
-    if (remainingRequests < 0) {
-        res.status(429).json({ ok: false, msg: "Too frequently, try again later." });
-        return;
-    }
-    next();
-}
 
 let processingSetup = false;
 let _hasUser = false;
