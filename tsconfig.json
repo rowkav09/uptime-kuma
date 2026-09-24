@@ -2,15 +2,16 @@
     "compileOnSave": true,
     "compilerOptions": {
         "newLine": "LF",
-        "target": "es2018",
-        "module": "commonjs",
+        "target": "esnext",
+        "module": "esnext",
         "lib": ["es2020", "DOM"],
         "declaration": false,
         "removeComments": true,
         "preserveConstEnums": true,
         "sourceMap": false,
         "strict": true,
+        "noEmit": true,
         "esModuleInterop": true
     },
-    "files": []
+    "include": ["src/**/*.ts", "server/**/*.ts"]
 }
