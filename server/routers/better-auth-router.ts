@@ -26,8 +26,10 @@ export async function createBetterAuthRouter() {
 
     betterAuthRouter.all("/api/auth/*", async (req, res) => {
         allowDevOrigin(req, res);
-        if (!(await loginRateLimiter.pass(null, 1))) {
-            res.status(429).json({ ok: false, msg: "Too many requests" });
+        const passed = await loginRateLimiter.pass((err: { ok: boolean; msg: string }) => {
+            res.status(429).json({ ok: false, msg: err.msg });
+        }, 1);
+        if (!passed) {
             return;
         }
         return toNodeHandler(auth())(req, res);
@@ -36,8 +38,10 @@ export async function createBetterAuthRouter() {
     // First Setup
     betterAuthRouter.post("/api/setup", async (req, res) => {
         allowDevOrigin(req, res);
-        if (!(await loginRateLimiter.pass(null, 1))) {
-            res.status(429).json({ ok: false, msg: "Too many requests" });
+        const passed = await loginRateLimiter.pass((err: { ok: boolean; msg: string }) => {
+            res.status(429).json({ ok: false, msg: err.msg });
+        }, 1);
+        if (!passed) {
             return;
         }
 
