@@ -6,9 +6,23 @@ import { log } from "../../src/util";
 
 // @ts-ignore
 import { allowDevOrigin } from "../util-server.js";
-// @ts-ignore
-import { loginRateLimiter } from "../rate-limiter.js";
+import { RateLimiter } from "limiter";
 import { generalErrorResponse } from "../util2";
+
+const authRateLimiter = new RateLimiter({
+    tokensPerInterval: 20,
+    interval: "minute",
+    fireImmediately: true,
+});
+
+async function rateLimiterMiddleware(req: express.Request, res: express.Response, next: express.NextFunction) {
+    const remainingRequests = await authRateLimiter.removeTokens(1);
+    if (remainingRequests < 0) {
+        res.status(429).json({ ok: false, msg: "Too frequently, try again later." });
+        return;
+    }
+    next();
+}
 
 let processingSetup = false;
 let _hasUser = false;
