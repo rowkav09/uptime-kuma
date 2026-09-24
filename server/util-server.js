@@ -634,19 +634,17 @@ exports.allowDevOrigin = (req, res) => {
 exports.allowOrigin = (req, res) => {
     const origin = req.get("origin");
     if (origin) {
-        try {
-            const parsed = new URL(origin);
-            if (
-                process.env.NODE_ENV === "development" &&
-                (parsed.hostname === "localhost" || parsed.hostname === "127.0.0.1")
-            ) {
-                res.header("Access-Control-Allow-Origin", origin);
-                res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
-                res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-                res.header("Access-Control-Allow-Credentials", "true");
-            }
-        } catch (_) {
-            // Ignore invalid origin URLs
+        const allowedOrigins = [
+            "http://localhost:3000",
+            "http://localhost:3001",
+            "http://127.0.0.1:3000",
+            "http://127.0.0.1:3001",
+        ];
+        if (process.env.NODE_ENV === "development" && allowedOrigins.includes(origin)) {
+            res.header("Access-Control-Allow-Origin", origin);
+            res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+            res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+            res.header("Access-Control-Allow-Credentials", "true");
         }
     }
 };
