@@ -10,7 +10,8 @@
         "preserveConstEnums": true,
         "sourceMap": false,
         "strict": true,
+        "noEmit": true,
         "esModuleInterop": true
     },
-    "files": []
+    "include": ["src/**/*.ts", "server/**/*.ts"]
 }

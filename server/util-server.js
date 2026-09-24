@@ -633,7 +633,7 @@ exports.allowDevOrigin = (req, res) => {
  */
 exports.allowOrigin = (req, res) => {
     const origin = req.get("origin");
-    if (origin && process.env.NODE_ENV === "development") {
+    if (origin && (origin.startsWith("http://localhost:") || origin.startsWith("http://127.0.0.1:"))) {
         res.header("Access-Control-Allow-Origin", origin);
         res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
         res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
