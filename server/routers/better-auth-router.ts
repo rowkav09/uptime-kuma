@@ -6,16 +6,18 @@ import { log } from "../../src/util";
 
 // @ts-ignore
 import { allowDevOrigin } from "../util-server.js";
-import { rateLimit } from "express-rate-limit";
+// @ts-ignore
+import { loginRateLimiter } from "../rate-limiter.js";
 import { generalErrorResponse } from "../util2";
 
-const authLimiter = rateLimit({
-    windowMs: 60 * 1000,
-    max: 20,
-    standardHeaders: true,
-    legacyHeaders: false,
-    message: { ok: false, msg: "Too frequently, try again later." },
-});
+async function loginRateLimiterMiddleware(req: express.Request, res: express.Response, next: express.NextFunction) {
+    const remainingRequests = await loginRateLimiter.removeTokens(1);
+    if (remainingRequests < 0) {
+        res.status(429).json({ ok: false, msg: "Too frequently, try again later." });
+        return;
+    }
+    next();
+}
 
 let processingSetup = false;
 let _hasUser = false;
@@ -31,24 +33,16 @@ const expiredMsg = "Setup has expired. Please restart the server to try again.";
 export async function createBetterAuthRouter() {
     const betterAuthRouter = express.Router();
 
-    betterAuthRouter.all("/api/auth/*", async (req, res) => {
+    betterAuthRouter.use(loginRateLimiterMiddleware);
+
+    betterAuthRouter.all("/api/auth/*", loginRateLimiterMiddleware, async (req, res) => {
         allowDevOrigin(req, res);
-        const remaining = await loginRateLimiter.removeTokens(1);
-        if (remaining < 0) {
-            res.status(429).json({ ok: false, msg: "Too many requests" });
-            return;
-        }
         return toNodeHandler(auth())(req, res);
     });
 
     // First Setup
-    betterAuthRouter.post("/api/setup", async (req, res) => {
+    betterAuthRouter.post("/api/setup", loginRateLimiterMiddleware, async (req, res) => {
         allowDevOrigin(req, res);
-        const remaining = await loginRateLimiter.removeTokens(1);
-        if (remaining < 0) {
-            res.status(429).json({ ok: false, msg: "Too many requests" });
-            return;
-        }
 
         try {
             if (expired) {
