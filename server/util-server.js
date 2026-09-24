@@ -632,10 +632,13 @@ exports.allowDevOrigin = (req, res) => {
  * @returns {void}
  */
 exports.allowOrigin = (req, res) => {
-    res.header("Access-Control-Allow-Origin", req.get("origin"));
-    res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-    res.header("Access-Control-Allow-Credentials", "true");
+    const origin = req.get("origin");
+    if (origin && process.env.NODE_ENV === "development") {
+        res.header("Access-Control-Allow-Origin", origin);
+        res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+        res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+        res.header("Access-Control-Allow-Credentials", "true");
+    }
 };
 
 /**

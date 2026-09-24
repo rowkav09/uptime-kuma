@@ -6,6 +6,8 @@ import { log } from "../../src/util";
 
 // @ts-ignore
 import { allowDevOrigin } from "../util-server.js";
+// @ts-ignore
+import { loginRateLimiter } from "../rate-limiter.js";
 import { generalErrorResponse } from "../util2";
 
 let processingSetup = false;
@@ -19,15 +21,24 @@ const expiredMsg = "Setup has expired. Please restart the server to try again.";
  * For testing: http://localhost:3001/api/auth/ok
  * @returns Express Router with better-auth routes and setup route.
  */
+async function authRateLimiter(req: express.Request, res: express.Response, next: express.NextFunction) {
+    const passed = await loginRateLimiter.pass((err: { ok: boolean; msg: string }) => {
+        res.status(429).json({ ok: false, msg: err.msg });
+    });
+    if (passed) {
+        next();
+    }
+}
+
 export async function createBetterAuthRouter() {
     const betterAuthRouter = express.Router();
-    betterAuthRouter.all("/api/auth/*", async (req, res) => {
+    betterAuthRouter.all("/api/auth/*", authRateLimiter, async (req, res) => {
         allowDevOrigin(req, res);
         return toNodeHandler(auth())(req, res);
     });
 
     // First Setup
-    betterAuthRouter.post("/api/setup", async (req, res) => {
+    betterAuthRouter.post("/api/setup", authRateLimiter, async (req, res) => {
         allowDevOrigin(req, res);
 
         try {

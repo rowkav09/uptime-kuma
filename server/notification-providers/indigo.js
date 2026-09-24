@@ -44,7 +44,8 @@ class Indigo extends NotificationProvider {
             // The Indigo Web Server on a LAN uses a self-signed certificate;
             // the Reflector (NAME.indigodomo.net) has a valid one.
             if (notification.indigoIgnoreTlsError) {
-                config.httpsAgent = new https.Agent({ rejectUnauthorized: false });
+                const rejectUnauthorized = !notification.indigoIgnoreTlsError;
+                config.httpsAgent = new https.Agent({ rejectUnauthorized });
             }
             config = this.getAxiosConfigWithProxy(config);
 

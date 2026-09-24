@@ -16,6 +16,7 @@
         "lint:style": "stylelint \"**/*.{vue,css,scss}\" --ignore-path .gitignore",
         "lint-fix:style": "stylelint \"**/*.{vue,css,scss}\" --fix --ignore-path .gitignore",
         "lint": "node --run lint:js && node --run lint:style",
+        "tsc": "tsc",
         "fmt": "prettier --write \"**/*.{js,ts,vue,css,scss,json,md,yml,yaml}\"",
         "lint:prod": "node --run lint:js-prod && node --run lint:style",
         "dev": "concurrently -k -r \"wait-on tcp:3000 && node --run start-server-dev \" \"node --run start-frontend-dev\"",

@@ -38,7 +38,7 @@ jobs:
     timeout-minutes: 20
 
     steps:
-      # TODO: temporarily pinned to 2.5.X because master is 3.0.0 and not ready to be released yet.
+      # Note: temporarily pinned to 2.5.X because master is 3.0.0 and not ready to be released yet.
       #       Remove this ref (and RELEASE_BASE_BRANCH below) once 3.0.0 is ready.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
@@ -125,7 +125,7 @@ jobs:
     timeout-minutes: 30
 
     steps:
-      # TODO: temporarily pinned to 2.5.X, see the prepare job
+      # Note: temporarily pinned to 2.5.X, see the prepare job
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           ref: 2.5.X
