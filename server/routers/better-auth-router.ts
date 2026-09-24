@@ -6,7 +6,7 @@ import { log } from "../../src/util";
 
 // @ts-ignore
 import { allowDevOrigin } from "../util-server.js";
-import rateLimit from "express-rate-limit";
+import { rateLimit } from "express-rate-limit";
 import { generalErrorResponse } from "../util2";
 
 const authLimiter = rateLimit({
