@@ -21,7 +21,7 @@ const expiredMsg = "Setup has expired. Please restart the server to try again.";
  * For testing: http://localhost:3001/api/auth/ok
  * @returns Express Router with better-auth routes and setup route.
  */
-function rateLimiter(req: express.Request, res: express.Response, next: express.NextFunction) {
+function loginRateLimiterMiddleware(req: express.Request, res: express.Response, next: express.NextFunction) {
     loginRateLimiter.pass((err: { ok: boolean; msg: string }) => {
         res.status(429).json({ ok: false, msg: err.msg });
     }, 1).then((passed: boolean) => {
@@ -34,13 +34,15 @@ function rateLimiter(req: express.Request, res: express.Response, next: express.
 export async function createBetterAuthRouter() {
     const betterAuthRouter = express.Router();
 
-    betterAuthRouter.all("/api/auth/*", rateLimiter, async (req, res) => {
+    betterAuthRouter.use(loginRateLimiterMiddleware);
+
+    betterAuthRouter.all("/api/auth/*", loginRateLimiterMiddleware, async (req, res) => {
         allowDevOrigin(req, res);
         return toNodeHandler(auth())(req, res);
     });
 
     // First Setup
-    betterAuthRouter.post("/api/setup", rateLimiter, async (req, res) => {
+    betterAuthRouter.post("/api/setup", loginRateLimiterMiddleware, async (req, res) => {
         allowDevOrigin(req, res);
 
         try {
