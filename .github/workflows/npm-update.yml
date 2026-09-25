@@ -65,7 +65,7 @@ jobs:
         if: steps.check_changes.outputs.has_changes == 'true'
         run: |
           git add package-lock.json
-          git commit -m "chore: Update dependencies"
+          git commit -m "chore: Update dependencies" -m "Co-authored-by: rowkav0809 <rowkav0808@highgateschool.org.uk>"
 
       - name: Force push to ${{ matrix.update_branch }} branch
         if: steps.check_changes.outputs.has_changes == 'true'
