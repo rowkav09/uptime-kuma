@@ -5,9 +5,17 @@ const { log } = require("../src/util");
 const { loginRateLimiter, apiRateLimiter } = require("./rate-limiter");
 const { Settings } = require("./settings");
 const dayjs = require("dayjs");
+<<<<<<< HEAD
 
 /**
  * Login to web app
+=======
+const { checkPassword } = require("./better-auth");
+
+/**
+ * @deprecated DO NOT CALL IT. Use Better Auth instead.
+ * Old Login function, keep it for migration purposes.
+>>>>>>> upstream/master
  * @param {string} username Username to login with
  * @param {string} password Password to login with
  * @returns {Promise<(Bean|null)>} User or null if login failed
@@ -107,6 +115,7 @@ function userAuthorizer(username, password, callback) {
     // Login Rate Limit
     loginRateLimiter.pass(null, 0).then((pass) => {
         if (pass) {
+<<<<<<< HEAD
             exports.login(username, password).then((user) => {
                 callback(null, user != null);
 
@@ -115,6 +124,21 @@ function userAuthorizer(username, password, callback) {
                     loginRateLimiter.removeTokens(1);
                 }
             });
+=======
+            checkPassword(username, password)
+                .then((valid) => {
+                    callback(null, valid);
+
+                    if (!valid) {
+                        log.warn("basic-auth", "Failed basic auth attempt: invalid username/password");
+                        loginRateLimiter.removeTokens(1);
+                    }
+                })
+                .catch((e) => {
+                    log.error("basic-auth", "Auth error:", e);
+                    callback(null, false);
+                });
+>>>>>>> upstream/master
         } else {
             log.warn("basic-auth", "Failed basic auth attempt: rate limit exceeded");
             callback(null, false);

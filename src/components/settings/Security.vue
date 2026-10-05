@@ -146,6 +146,10 @@
 <script>
 import Confirm from "../../components/Confirm.vue";
 import TwoFADialog from "../../components/TwoFADialog.vue";
+<<<<<<< HEAD
+=======
+import { authClient } from "../../auth-client";
+>>>>>>> upstream/master
 
 export default {
     components: {
@@ -185,6 +189,7 @@ export default {
     methods: {
         /**
          * Check new passwords match before saving them
+<<<<<<< HEAD
          * @returns {void}
          */
         savePassword() {
@@ -205,6 +210,27 @@ export default {
                         }
                     }
                 });
+=======
+         * @returns {Promise<void>}
+         */
+        async savePassword() {
+            if (this.password.newPassword !== this.password.repeatNewPassword) {
+                this.invalidPassword = true;
+            } else {
+                const { error } = await authClient.changePassword({
+                    currentPassword: this.password.currentPassword,
+                    newPassword: this.password.newPassword,
+                });
+
+                if (error) {
+                    this.$root.toastRes({ ok: false, msg: error.message });
+                } else {
+                    this.$root.toastRes({ ok: true, msg: this.$t("successAuthChangePassword") });
+                    this.password.currentPassword = "";
+                    this.password.newPassword = "";
+                    this.password.repeatNewPassword = "";
+                }
+>>>>>>> upstream/master
             }
         },
 
@@ -220,7 +246,10 @@ export default {
             this.saveSettings(() => {
                 this.password.currentPassword = "";
                 this.$root.username = null;
+<<<<<<< HEAD
                 this.$root.socket.token = "autoLogin";
+=======
+>>>>>>> upstream/master
             }, this.password.currentPassword);
         },
 
@@ -231,7 +260,10 @@ export default {
         enableAuth() {
             this.settings.disableAuth = false;
             this.saveSettings();
+<<<<<<< HEAD
             this.$root.storage().removeItem("token");
+=======
+>>>>>>> upstream/master
             location.reload();
         },
 

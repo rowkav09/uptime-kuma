@@ -19,7 +19,11 @@ async function sendNotificationList(socket) {
     const timeLogger = new TimeLogger();
 
     let result = [];
+<<<<<<< HEAD
     let list = await R.find("notification", " user_id = ? ", [socket.userID]);
+=======
+    let list = await R.find("notification");
+>>>>>>> upstream/master
 
     for (let bean of list) {
         let notificationObject = bean.export();
@@ -104,7 +108,11 @@ async function sendImportantHeartbeatList(socket, monitorID, toUser = false, ove
 async function sendProxyList(socket) {
     const timeLogger = new TimeLogger();
 
+<<<<<<< HEAD
     const list = await R.find("proxy", " user_id = ? ", [socket.userID]);
+=======
+    const list = await R.find("proxy");
+>>>>>>> upstream/master
     io.to(socket.userID).emit(
         "proxyList",
         list.map((bean) => bean.export())
@@ -124,7 +132,11 @@ async function sendAPIKeyList(socket) {
     const timeLogger = new TimeLogger();
 
     let result = [];
+<<<<<<< HEAD
     const list = await R.find("api_key", "user_id=?", [socket.userID]);
+=======
+    const list = await R.find("api_key");
+>>>>>>> upstream/master
 
     for (let bean of list) {
         result.push(bean.toPublicJSON());
@@ -171,7 +183,11 @@ async function sendDockerHostList(socket) {
     const timeLogger = new TimeLogger();
 
     let result = [];
+<<<<<<< HEAD
     let list = await R.find("docker_host", " user_id = ? ", [socket.userID]);
+=======
+    let list = await R.find("docker_host");
+>>>>>>> upstream/master
 
     for (let bean of list) {
         result.push(bean.toJSON());
@@ -193,7 +209,11 @@ async function sendRemoteBrowserList(socket) {
     const timeLogger = new TimeLogger();
 
     let result = [];
+<<<<<<< HEAD
     let list = await R.find("remote_browser", " user_id = ? ", [socket.userID]);
+=======
+    let list = await R.find("remote_browser");
+>>>>>>> upstream/master
 
     for (let bean of list) {
         result.push(bean.toJSON());

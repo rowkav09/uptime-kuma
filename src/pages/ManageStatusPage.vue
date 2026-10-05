@@ -69,6 +69,15 @@ export default {
     components: {
         Confirm,
     },
+<<<<<<< HEAD
+=======
+    props: {
+        calculatedHeight: {
+            type: Number,
+            default: 0,
+        },
+    },
+>>>>>>> upstream/master
     data() {
         return {
             selectedStatusSlug: "",

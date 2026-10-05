@@ -1,15 +1,26 @@
+<<<<<<< HEAD
+=======
+import { checkLogin as betterAuthCheckLogin } from "./better-auth";
+
+>>>>>>> upstream/master
 const ping = require("@louislam/ping");
 const { R } = require("redbean-node");
 const {
     log,
+<<<<<<< HEAD
     genSecret,
+=======
+>>>>>>> upstream/master
     badgeConstants,
     PING_PACKET_SIZE_DEFAULT,
     PING_GLOBAL_TIMEOUT_DEFAULT,
     PING_COUNT_DEFAULT,
     PING_PER_REQUEST_TIMEOUT_DEFAULT,
 } = require("../src/util");
+<<<<<<< HEAD
 const passwordHash = require("./password-hash");
+=======
+>>>>>>> upstream/master
 const iconv = require("iconv-lite");
 const chardet = require("chardet");
 const chroma = require("chroma-js");
@@ -35,6 +46,7 @@ const { Kafka, SASLOptions } = require("kafkajs");
 const crypto = require("crypto");
 
 const isWindows = process.platform === /^win/.test(process.platform);
+<<<<<<< HEAD
 /**
  * Init or reset JWT secret
  * @returns {Promise<Bean>} JWT secret
@@ -60,6 +72,8 @@ exports.initJWTSecret = async () => {
 exports.decodeJwt = (jwt) => {
     return JSON.parse(Buffer.from(jwt.split(".")[1], "base64").toString());
 };
+=======
+>>>>>>> upstream/master
 
 /**
  * Gets an Access Token from an oidc/oauth2 provider
@@ -614,6 +628,10 @@ exports.getTotalClientInRoom = (io, roomName) => {
 };
 
 /**
+<<<<<<< HEAD
+=======
+ * @deprecated Use allowDevOrigin
+>>>>>>> upstream/master
  * Allow CORS all origins if development
  * @param {object} res Response object from axios
  * @returns {void}
@@ -625,6 +643,10 @@ exports.allowDevAllOrigin = (res) => {
 };
 
 /**
+<<<<<<< HEAD
+=======
+ * @deprecated Use allowOrigin
+>>>>>>> upstream/master
  * Allow CORS all origins
  * @param {object} res Response object from axios
  * @returns {void}
@@ -636,12 +658,43 @@ exports.allowAllOrigin = (res) => {
 };
 
 /**
+<<<<<<< HEAD
+=======
+ * Allow CORS all origins if development
+ * @param {Request} req Express request object
+ * @param {Response} res Express response object
+ * @returns {void}
+ */
+exports.allowDevOrigin = (req, res) => {
+    if (process.env.NODE_ENV === "development") {
+        exports.allowOrigin(req, res);
+    }
+};
+
+/**
+ * Allow CORS all origins
+ * Since Allow-Credentials is set to true, the Access-Control-Allow-Origin cannot be *, so we will set it to the request origin.
+ * @param {Request} req Express request object
+ * @param {Response} res Response object
+ * @returns {void}
+ */
+exports.allowOrigin = (req, res) => {
+    res.header("Access-Control-Allow-Origin", req.get("origin"));
+    res.header("Access-Control-Allow-Methods", "GET, PUT, POST, DELETE, OPTIONS");
+    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+    res.header("Access-Control-Allow-Credentials", "true");
+};
+
+/**
+ * @deprecated Use better-auth's checkLogin
+>>>>>>> upstream/master
  * Check if a user is logged in
  * @param {Socket} socket Socket instance
  * @returns {void}
  * @throws The user is not logged in
  */
 exports.checkLogin = (socket) => {
+<<<<<<< HEAD
     if (!socket.userID) {
         throw new Error("You are not logged in.");
     }
@@ -667,6 +720,9 @@ exports.doubleCheckPassword = async (socket, currentPassword) => {
     }
 
     return user;
+=======
+    betterAuthCheckLogin(socket);
+>>>>>>> upstream/master
 };
 
 /**

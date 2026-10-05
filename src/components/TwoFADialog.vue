@@ -73,6 +73,7 @@
 
                             <div v-if="uri && twoFAStatus == false" class="mt-3">
                                 <label for="basic-url" class="form-label">{{ $t("twoFAVerifyLabel") }}</label>
+<<<<<<< HEAD
                                 <div class="input-group">
                                     <input
                                         v-model="token"
@@ -89,6 +90,16 @@
                                 <p v-show="tokenValid" class="mt-2" style="color: green">
                                     {{ $t("tokenValidSettingsMsg") }}
                                 </p>
+=======
+                                <input
+                                    v-model="token"
+                                    type="text"
+                                    maxlength="6"
+                                    class="form-control"
+                                    autocomplete="one-time-code"
+                                    required
+                                />
+>>>>>>> upstream/master
                             </div>
                         </div>
                     </div>
@@ -97,7 +108,11 @@
                         <button
                             type="submit"
                             class="btn btn-primary"
+<<<<<<< HEAD
                             :disabled="processing || tokenValid == false"
+=======
+                            :disabled="processing"
+>>>>>>> upstream/master
                             @click="confirmEnableTwoFA()"
                         >
                             <div v-if="processing" class="spinner-border spinner-border-sm me-1"></div>
@@ -109,7 +124,11 @@
         </div>
     </form>
 
+<<<<<<< HEAD
     <Confirm ref="confirmEnableTwoFA" btn-style="btn-danger" :yes-text="$t('Yes')" :no-text="$t('No')" @yes="save2FA">
+=======
+    <Confirm ref="confirmEnableTwoFA" btn-style="btn-danger" :yes-text="$t('Yes')" :no-text="$t('No')" @yes="enable2FA">
+>>>>>>> upstream/master
         {{ $t("confirmEnableTwoFAMsg") }}
     </Confirm>
 
@@ -128,6 +147,10 @@
 import { Modal } from "bootstrap";
 import Confirm from "./Confirm.vue";
 import VueQrcode from "vue-qrcode";
+<<<<<<< HEAD
+=======
+import { authClient } from "../auth-client";
+>>>>>>> upstream/master
 
 export default {
     components: {
@@ -140,8 +163,12 @@ export default {
             currentPassword: "",
             processing: false,
             uri: null,
+<<<<<<< HEAD
             tokenValid: false,
             twoFAStatus: null,
+=======
+            twoFAStatus: null as boolean | null,
+>>>>>>> upstream/master
             token: null,
             showURI: false,
         };
@@ -179,6 +206,7 @@ export default {
          * Prepare 2FA configuration
          * @returns {void}
          */
+<<<<<<< HEAD
         prepare2FA() {
             this.processing = true;
 
@@ -212,12 +240,57 @@ export default {
                     this.$root.toastError(res.msg);
                 }
             });
+=======
+        async prepare2FA() {
+            this.processing = true;
+
+            const { data, error } = await authClient.twoFactor.enable({
+                password: this.currentPassword!,
+                issuer: "Uptime Kuma",
+            });
+
+            this.processing = false;
+
+            if (!data || error) {
+                this.$root.toastError(error.message);
+                return;
+            }
+
+            this.currentPassword = "";
+            this.uri = data.totpURI;
+        },
+
+        /**
+         * Enable 2FA for this user
+         * @returns {void}
+         */
+        async enable2FA() {
+            this.processing = true;
+
+            const { error } = await authClient.twoFactor.verifyTotp({
+                code: this.token!,
+            });
+
+            this.processing = false;
+
+            if (error) {
+                this.$root.toastError(error.message);
+                return;
+            }
+
+            this.$root.toastSuccess(this.$t("2faEnabled"));
+            this.twoFAStatus = true;
+            this.uri = null;
+            this.token = null;
+            this.modal.hide();
+>>>>>>> upstream/master
         },
 
         /**
          * Disable 2FA for this user
          * @returns {void}
          */
+<<<<<<< HEAD
         disable2FA() {
             this.processing = true;
 
@@ -247,12 +320,33 @@ export default {
                     this.$root.toastError(res.msg);
                 }
             });
+=======
+        async disable2FA(): Promise<void> {
+            this.processing = true;
+
+            const { error } = await authClient.twoFactor.disable({
+                password: this.currentPassword!,
+            });
+
+            this.processing = false;
+
+            if (error) {
+                this.$root.toastError(error.message);
+                return;
+            }
+
+            this.$root.toastSuccess(this.$t("2faDisabled"));
+            this.twoFAStatus = false;
+            this.currentPassword = "";
+            this.modal.hide();
+>>>>>>> upstream/master
         },
 
         /**
          * Get current status of 2FA
          * @returns {void}
          */
+<<<<<<< HEAD
         getStatus() {
             this.$root.getSocket().emit("twoFAStatus", (res) => {
                 if (res.ok) {
@@ -261,6 +355,16 @@ export default {
                     this.$root.toastError(res.msg);
                 }
             });
+=======
+        async getStatus() {
+            const { data, error } = await authClient.getSession();
+            if (error) {
+                this.$root.toastError(error.message);
+                return;
+            }
+
+            this.twoFAStatus = data!.user.twoFactorEnabled ?? false;
+>>>>>>> upstream/master
         },
     },
 };

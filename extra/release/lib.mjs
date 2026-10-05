@@ -1,9 +1,20 @@
+<<<<<<< HEAD
 import "dotenv/config";
+=======
+import { loadEnvFile } from "node:process";
+>>>>>>> upstream/master
 import * as childProcess from "child_process";
 import semver from "semver";
 import fs from "fs";
 import tar from "tar";
 
+<<<<<<< HEAD
+=======
+try {
+    loadEnvFile();
+} catch (_) {}
+
+>>>>>>> upstream/master
 // Support both the legacy RELEASE_DRY_RUN=1 format and DRY_RUN=true used by GitHub Actions workflows
 export const dryRun = process.env.RELEASE_DRY_RUN === "1" || process.env.DRY_RUN === "true";
 
@@ -121,7 +132,11 @@ export function buildImage(
     target,
     buildArgs = "",
     dockerfile = "docker/dockerfile",
+<<<<<<< HEAD
     platform = "linux/amd64,linux/arm64,linux/arm/v7"
+=======
+    platform = "linux/amd64,linux/arm64"
+>>>>>>> upstream/master
 ) {
     let args = ["buildx", "build", "-f", dockerfile, "--platform", platform];
 
@@ -386,13 +401,22 @@ export async function uploadReleaseAssets(version, files) {
  * @returns {void}
  */
 export function buildAllImages(repoNames, version, isBeta) {
+<<<<<<< HEAD
+=======
+    const majorVersion = semver.parse(version).major;
+
+>>>>>>> upstream/master
     if (isBeta) {
         // Build slim image (rootless)
         buildImage(
             repoNames,
             ["beta-slim-rootless", ver(version, "slim-rootless")],
             "rootless",
+<<<<<<< HEAD
             "BASE_IMAGE=louislam/uptime-kuma:base2-slim"
+=======
+            `BASE_IMAGE=louislam/uptime-kuma:base${majorVersion}-slim`
+>>>>>>> upstream/master
         );
 
         // Build full image (rootless)
@@ -403,7 +427,11 @@ export function buildAllImages(repoNames, version, isBeta) {
             repoNames,
             ["beta-slim", ver(version, "slim")],
             "release",
+<<<<<<< HEAD
             "BASE_IMAGE=louislam/uptime-kuma:base2-slim"
+=======
+            `BASE_IMAGE=louislam/uptime-kuma:base${majorVersion}-slim`
+>>>>>>> upstream/master
         );
 
         // Build full image
@@ -412,6 +440,7 @@ export function buildAllImages(repoNames, version, isBeta) {
         // Build slim image (rootless)
         buildImage(
             repoNames,
+<<<<<<< HEAD
             ["2-slim-rootless", ver(version, "slim-rootless")],
             "rootless",
             "BASE_IMAGE=louislam/uptime-kuma:base2-slim"
@@ -419,10 +448,20 @@ export function buildAllImages(repoNames, version, isBeta) {
 
         // Build full image (rootless)
         buildImage(repoNames, ["next-rootless", "2-rootless", ver(version, "rootless")], "rootless");
+=======
+            [`${majorVersion}-slim-rootless`, ver(version, "slim-rootless")],
+            "rootless",
+            `BASE_IMAGE=louislam/uptime-kuma:base${majorVersion}-slim`
+        );
+
+        // Build full image (rootless)
+        buildImage(repoNames, ["next-rootless", `${majorVersion}-rootless`, ver(version, "rootless")], "rootless");
+>>>>>>> upstream/master
 
         // Build slim image
         buildImage(
             repoNames,
+<<<<<<< HEAD
             ["next-slim", "2-slim", ver(version, "slim")],
             "release",
             "BASE_IMAGE=louislam/uptime-kuma:base2-slim"
@@ -430,6 +469,15 @@ export function buildAllImages(repoNames, version, isBeta) {
 
         // Build full image
         buildImage(repoNames, ["next", "2", version], "release");
+=======
+            ["next-slim", `${majorVersion}-slim`, ver(version, "slim")],
+            "release",
+            `BASE_IMAGE=louislam/uptime-kuma:base${majorVersion}-slim`
+        );
+
+        // Build full image
+        buildImage(repoNames, ["next", `${majorVersion}`, version], "release");
+>>>>>>> upstream/master
     }
 }
 

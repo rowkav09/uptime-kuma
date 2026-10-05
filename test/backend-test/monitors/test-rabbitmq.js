@@ -7,7 +7,13 @@ const { UP, PENDING } = require("../../../src/util");
 describe(
     "RabbitMQ Single Node",
     {
+<<<<<<< HEAD
         skip: !!process.env.CI && (process.platform !== "linux" || process.arch !== "x64"),
+=======
+        skip:
+            (!!process.env.CI && (process.platform !== "linux" || process.arch !== "x64")) ||
+            process.env.SKIP_TESTCONTAINER,
+>>>>>>> upstream/master
     },
     () => {
         test("check() sets status to UP when RabbitMQ server is reachable", async () => {
