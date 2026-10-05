@@ -1,11 +1,15 @@
 import { io } from "socket.io-client";
 import { useToast } from "vue-toastification";
+<<<<<<< HEAD
 import jwtDecode from "jwt-decode";
+=======
+>>>>>>> upstream/master
 import Favico from "favico.js";
 import dayjs from "dayjs";
 import mitt from "mitt";
 
 import { DOWN, MAINTENANCE, PENDING, UP } from "../util.ts";
+<<<<<<< HEAD
 import {
     getDevContainerServerHostname,
     isDevContainer,
@@ -15,6 +19,14 @@ import {
 const toast = useToast();
 
 let socket;
+=======
+import { getToastSuccessTimeout, getToastErrorTimeout } from "../util-frontend.js";
+import { logout as betterAuthLogout } from "../auth-client";
+const toast = useToast();
+
+let socket;
+let disconnectTimeout;
+>>>>>>> upstream/master
 
 const noSocketIOPages = [
     /^\/status-page$/, //  /status-page
@@ -31,7 +43,10 @@ export default {
         return {
             info: {},
             socket: {
+<<<<<<< HEAD
                 token: null,
+=======
+>>>>>>> upstream/master
                 firstConnect: true,
                 connected: false,
                 connectCount: 0,
@@ -108,21 +123,32 @@ export default {
 
             let url;
             const env = process.env.NODE_ENV || "production";
+<<<<<<< HEAD
             if (env === "development" && isDevContainer()) {
                 url = protocol + getDevContainerServerHostname();
             } else if (env === "development" || localStorage.dev === "dev") {
+=======
+            if (env === "development" || localStorage.dev === "dev") {
+>>>>>>> upstream/master
                 url = protocol + location.hostname + ":3001";
             } else {
                 // Connect to the current url
                 url = undefined;
             }
 
+<<<<<<< HEAD
             socket = io(url);
+=======
+            socket = io(url, {
+                withCredentials: true,
+            });
+>>>>>>> upstream/master
 
             socket.on("info", (info) => {
                 this.info = info;
             });
 
+<<<<<<< HEAD
             socket.on("setup", (monitorID, data) => {
                 this.$router.push("/setup");
             });
@@ -142,6 +168,19 @@ export default {
                     this.$root.storage().removeItem("token");
                     this.allowLoginDialog = true;
                 }
+=======
+            socket.on("setup", () => {
+                this.$router.push("/setup");
+            });
+
+            socket.on("session", (username) => {
+                this.loggedIn = true;
+                this.username = username;
+            });
+
+            socket.on("loginRequired", () => {
+                this.allowLoginDialog = true;
+>>>>>>> upstream/master
             });
 
             socket.on("monitorList", (data) => {
@@ -267,12 +306,27 @@ export default {
 
             socket.on("disconnect", () => {
                 console.log("disconnect");
+<<<<<<< HEAD
                 this.connectionErrorMsg = `${this.$t("Lost connection to the socket server.")} ${this.$t("Reconnecting...")}`;
                 this.socket.connected = false;
+=======
+                // As we are using cookie based auth, we have to reconnect the socket
+                // avoid noise by add a delay
+                disconnectTimeout = setTimeout(() => {
+                    this.connectionErrorMsg = `${this.$t("Lost connection to the socket server.")} ${this.$t("Reconnecting...")}`;
+                    this.socket.connected = false;
+                }, 2000);
+>>>>>>> upstream/master
             });
 
             socket.on("connect", () => {
                 console.log("Connected to the socket server");
+<<<<<<< HEAD
+=======
+
+                clearTimeout(disconnectTimeout);
+
+>>>>>>> upstream/master
                 this.socket.connectCount++;
                 this.socket.connected = true;
                 this.showReverseProxyGuide = false;
@@ -327,6 +381,7 @@ export default {
         },
 
         /**
+<<<<<<< HEAD
          * Get payload of JWT cookie
          * @returns {(object | undefined)} JWT payload
          */
@@ -340,6 +395,8 @@ export default {
         },
 
         /**
+=======
+>>>>>>> upstream/master
          * Get current socket
          * @returns {Socket} Current socket
          */
@@ -396,6 +453,7 @@ export default {
         },
 
         /**
+<<<<<<< HEAD
          * Callback for login
          * @callback loginCB
          * @param {object} res Response object
@@ -518,6 +576,20 @@ export default {
          */
         twoFAStatus(callback) {
             socket.emit("twoFAStatus", callback);
+=======
+         * Log out of the web application
+         * @returns {void}
+         */
+        async logout() {
+            await betterAuthLogout(() => {
+                console.log("Logged out");
+                this.loggedIn = false;
+                this.username = null;
+                this.allowLoginDialog = false;
+                this.clearData();
+                reconnectSocket();
+            });
+>>>>>>> upstream/master
         },
 
         /**
@@ -869,7 +941,17 @@ export default {
 
         // Reload the SPA if the server version is changed.
         "info.version"(to, from) {
+<<<<<<< HEAD
             if (from && from !== to) {
+=======
+            // No need to refresh, when the version is not obtained, which means it is not logged in.
+            if (!to) {
+                return;
+            }
+
+            if (from && from !== to) {
+                console.log(`Server version changed from ${from} to ${to}, reloading the page`);
+>>>>>>> upstream/master
                 window.location.reload();
             }
         },
@@ -892,3 +974,17 @@ export default {
         },
     },
 };
+<<<<<<< HEAD
+=======
+
+/**
+ * Reconnect the socket.io connection.
+ * Usage: Reconnect socket.io with auth-ed cookie, or drop the auth-ed session.
+ */
+export function reconnectSocket() {
+    if (socket) {
+        socket.disconnect();
+        socket.connect();
+    }
+}
+>>>>>>> upstream/master

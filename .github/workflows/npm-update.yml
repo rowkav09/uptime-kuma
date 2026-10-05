@@ -17,6 +17,7 @@ jobs:
     permissions:
       contents: write
       pull-requests: write
+<<<<<<< HEAD
 
     steps:
       - name: Checkout master branch
@@ -27,6 +28,26 @@ jobs:
 
       - name: Setup Node.js
         uses: actions/setup-node@395ad3262231945c25e8478fd5baf05154b1d79f # v6.1.0
+=======
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - branch: master
+            update_branch: npm-update
+          - branch: 2.5.X
+            update_branch: npm-update-2.5.X
+
+    steps:
+      - name: Checkout ${{ matrix.branch }} branch
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          ref: ${{ matrix.branch }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+>>>>>>> upstream/master
         with:
           node-version: 20
 
@@ -57,12 +78,21 @@ jobs:
         if: steps.check_changes.outputs.has_changes == 'true'
         run: |
           git add package-lock.json
+<<<<<<< HEAD
           git commit -m "chore: Update dependencies" -m "Co-authored-by: rowkav0809 <rowkav0808@highgateschool.org.uk>"
 
       - name: Force push to npm-update branch
         if: steps.check_changes.outputs.has_changes == 'true'
         run: |
           git push -f origin HEAD:npm-update
+=======
+          git commit -m "chore: Update dependencies"
+
+      - name: Force push to ${{ matrix.update_branch }} branch
+        if: steps.check_changes.outputs.has_changes == 'true'
+        run: |
+          git push -f origin HEAD:${{ matrix.update_branch }}
+>>>>>>> upstream/master
 
       - name: Check if PR exists
         if: steps.check_changes.outputs.has_changes == 'true'
@@ -70,7 +100,11 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
+<<<<<<< HEAD
           PR_EXISTS=$(gh pr list --base master --head npm-update --json number --jq 'length')
+=======
+          PR_EXISTS=$(gh pr list --base ${{ matrix.branch }} --head ${{ matrix.update_branch }} --json number --jq 'length')
+>>>>>>> upstream/master
           if [ "$PR_EXISTS" -eq "0" ]; then
             echo "pr_exists=false" >> $GITHUB_OUTPUT
           else
@@ -83,7 +117,12 @@ jobs:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           gh pr create \
+<<<<<<< HEAD
             --base master \
             --head npm-update \
+=======
+            --base ${{ matrix.branch }} \
+            --head ${{ matrix.update_branch }} \
+>>>>>>> upstream/master
             --title "chore: Update dependencies" \
             --body ""

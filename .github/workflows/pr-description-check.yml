@@ -19,14 +19,22 @@ jobs:
       issues: write
     steps:
       - name: Check PR description
+<<<<<<< HEAD
         uses: actions/github-script@ed597411d8f924073f98dfc5c65a23a2325f34cd # v8.0.0
+=======
+        uses: actions/github-script@3a2844b7e9c422d3c10d287c895573f7108da1b3 # v9.0.0
+>>>>>>> upstream/master
         with:
           script: |
             const pr = context.payload.pull_request;
             const body = (pr && pr.body) ? pr.body : "";
             const requiredPhrase = "avoid unnecessary back and forth";
 
+<<<<<<< HEAD
             const exclude = ["UptimeKumaBot", "Copilot", "copilot-swe-agent"];
+=======
+            const exclude = ["UptimeKumaBot", "Copilot", "copilot-swe-agent", "dependabot[bot]"];
+>>>>>>> upstream/master
             const excludeLower = exclude.map((e) => e.toLowerCase());
             const author = pr?.user?.login || "";
 
@@ -36,6 +44,17 @@ jobs:
               return;
             }
 
+<<<<<<< HEAD
+=======
+            // Skip maintainers/admins (repo owner, org members, and collaborators with write access)
+            const exemptAssociations = ["OWNER", "MEMBER", "COLLABORATOR"];
+            const association = pr?.author_association || "";
+            if (exemptAssociations.includes(association)) {
+              core.info(`PR #${pr.number} opened by maintainer/admin '${author}' (${association}), skipping template check.`);
+              return;
+            }
+
+>>>>>>> upstream/master
             // Skip release PRs (created by the release workflow)
             const isReleasePR = (pr?.head?.ref || "").startsWith("release-");
             if (isReleasePR) {

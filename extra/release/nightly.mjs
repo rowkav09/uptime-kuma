@@ -10,7 +10,14 @@ checkDocker();
 buildDist();
 
 // Build full image (rootless)
+<<<<<<< HEAD
 buildImage(repoNames, [ "nightly2-rootless" ], "nightly-rootless");
 
 // Build full image
 buildImage(repoNames, [ "nightly2" ], "nightly");
+=======
+buildImage(repoNames, ["nightly3-rootless", "nightly-rootless"], "nightly-rootless");
+
+// Build full image
+buildImage(repoNames, ["nightly3", "nightly"], "nightly");
+>>>>>>> upstream/master

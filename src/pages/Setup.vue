@@ -1,5 +1,9 @@
 <template>
+<<<<<<< HEAD
     <div class="form-container" data-cy="setup-form">
+=======
+    <div v-if="ready" class="form-container">
+>>>>>>> upstream/master
         <div class="form">
             <form @submit.prevent="submit">
                 <div>
@@ -73,9 +77,19 @@
 </template>
 
 <script>
+<<<<<<< HEAD
 export default {
     data() {
         return {
+=======
+import { checkFetch } from "../util";
+import { authClient, baseURL, login } from "../auth-client";
+
+export default {
+    data() {
+        return {
+            ready: false,
+>>>>>>> upstream/master
             processing: false,
             username: "",
             password: "",
@@ -83,6 +97,7 @@ export default {
         };
     },
     watch: {},
+<<<<<<< HEAD
     mounted() {
         // TODO: Check if it is a database setup
 
@@ -91,13 +106,35 @@ export default {
                 this.$router.push("/");
             }
         });
+=======
+    async mounted() {
+        this.$root.getSocket().emit("needSetup", (needSetup) => {
+            console.log(needSetup);
+            if (!needSetup) {
+                this.$router.push("/");
+            } else {
+                this.ready = true;
+            }
+        });
+
+        // Check if /setup-database-info is available, if so, redirect to it
+        const res = await fetch(baseURL + "/setup-database-info");
+        const data = await res.json();
+        if (res.ok && data.needSetup) {
+            this.$router.push("/setup-database");
+        }
+>>>>>>> upstream/master
     },
     methods: {
         /**
          * Submit form data for processing
          * @returns {void}
          */
+<<<<<<< HEAD
         submit() {
+=======
+        async submit() {
+>>>>>>> upstream/master
             this.processing = true;
 
             if (this.password !== this.repeatPassword) {
@@ -106,6 +143,7 @@ export default {
                 return;
             }
 
+<<<<<<< HEAD
             this.$root.getSocket().emit("setup", this.username, this.password, (res) => {
                 this.processing = false;
                 this.$root.toastRes(res);
@@ -119,6 +157,36 @@ export default {
                     });
                 }
             });
+=======
+            try {
+                const response = await fetch(baseURL + "/api/setup", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        username: this.username,
+                        password: this.password,
+                    }),
+                });
+
+                await checkFetch(response);
+
+                // Login
+                await login(this.username, this.password);
+
+                // Redirect to home page
+                this.$router.push("/");
+            } catch (error) {
+                this.$root.toastRes({
+                    ok: false,
+                    msg: error.message,
+                    msgi18n: false,
+                });
+            } finally {
+                this.processing = false;
+            }
+>>>>>>> upstream/master
         },
     },
 };

@@ -3,6 +3,16 @@
  * node "server/server.js"
  * DO NOT require("./server") in other modules, it likely creates circular dependency!
  */
+<<<<<<< HEAD
+=======
+import { getRandomInt, isDev, log, sleep } from "../src/util";
+import { auth, doubleCheckPassword, getDisableAuthSession, getSession } from "./better-auth";
+import { createBetterAuthRouter, needSetup } from "./routers/better-auth-router";
+import { betterAuthSocketHandler } from "./socket-handlers/better-auth-socket-handler";
+import { loadEnvFile } from "node:process";
+import * as fs from "node:fs";
+
+>>>>>>> upstream/master
 console.log("Welcome to Uptime Kuma");
 
 // As the log function need to use dayjs, it should be very top
@@ -12,14 +22,24 @@ dayjs.extend(require("./modules/dayjs/plugin/timezone"));
 dayjs.extend(require("dayjs/plugin/customParseFormat"));
 
 // Load environment variables from `.env`
+<<<<<<< HEAD
 require("dotenv").config();
+=======
+try {
+    loadEnvFile();
+} catch (_) {}
+>>>>>>> upstream/master
 
 // Check Node.js Version
 const nodeVersion = process.versions.node;
 
 // Get the required Node.js version from package.json
 const requiredNodeVersions = require("../package.json").engines.node;
+<<<<<<< HEAD
 const bannedNodeVersions = " < 18 || 20.0.* || 20.1.* || 20.2.* || 20.3.* ";
+=======
+const bannedNodeVersions = "< 24";
+>>>>>>> upstream/master
 console.log(`Your Node.js version: ${nodeVersion}`);
 
 const semver = require("semver");
@@ -46,7 +66,10 @@ if (!semver.satisfies(nodeVersion, requiredNodeVersions)) {
 }
 
 const args = require("args-parser")(process.argv);
+<<<<<<< HEAD
 const { sleep, log, getRandomInt, genSecret, isDev } = require("../src/util");
+=======
+>>>>>>> upstream/master
 const config = require("./config");
 
 process.title = "uptime-kuma";
@@ -97,18 +120,24 @@ const express = require("express");
 const expressStaticGzip = require("express-static-gzip");
 log.debug("server", "Importing redbean-node");
 const { R } = require("redbean-node");
+<<<<<<< HEAD
 log.debug("server", "Importing jsonwebtoken");
 const jwt = require("jsonwebtoken");
+=======
+>>>>>>> upstream/master
 log.debug("server", "Importing http-graceful-shutdown");
 const gracefulShutdown = require("http-graceful-shutdown");
 log.debug("server", "Importing prometheus-api-metrics");
 const prometheusAPIMetrics = require("prometheus-api-metrics");
+<<<<<<< HEAD
 const { passwordStrength } = require("check-password-strength");
 const TranslatableError = require("./translatable-error");
 
 log.debug("server", "Importing 2FA Modules");
 const notp = require("notp");
 const base32 = require("thirty-two");
+=======
+>>>>>>> upstream/master
 
 const { UptimeKumaServer } = require("./uptime-kuma-server");
 const server = UptimeKumaServer.getInstance();
@@ -117,13 +146,17 @@ const app = server.app;
 
 log.debug("server", "Importing Monitor");
 const Monitor = require("./model/monitor");
+<<<<<<< HEAD
 const User = require("./model/user");
+=======
+>>>>>>> upstream/master
 
 log.debug("server", "Importing Settings");
 const {
     getSettings,
     setSettings,
     setting,
+<<<<<<< HEAD
     initJWTSecret,
     checkLogin,
     doubleCheckPassword,
@@ -131,6 +164,12 @@ const {
     SHAKE256_LENGTH,
     allowDevAllOrigin,
     printServerUrls,
+=======
+    checkLogin,
+    allowDevAllOrigin,
+    printServerUrls,
+    allowDevOrigin,
+>>>>>>> upstream/master
 } = require("./util-server");
 
 log.debug("server", "Importing Notification");
@@ -144,12 +183,16 @@ const Database = require("./database");
 
 log.debug("server", "Importing Background Jobs");
 const { initBackgroundJobs, stopBackgroundJobs } = require("./jobs");
+<<<<<<< HEAD
 const { loginRateLimiter, twoFaRateLimiter } = require("./rate-limiter");
 
 const { apiAuth } = require("./auth");
 const { login } = require("./auth");
 const passwordHash = require("./password-hash");
 
+=======
+const { apiAuth } = require("./auth");
+>>>>>>> upstream/master
 const { Prometheus } = require("./prometheus");
 const { UptimeCalculator } = require("./uptime-calculator");
 
@@ -165,12 +208,15 @@ const disableFrameSameOrigin =
     !!process.env.UPTIME_KUMA_DISABLE_FRAME_SAMEORIGIN || args["disable-frame-sameorigin"] || false;
 const cloudflaredToken = args["cloudflared-token"] || process.env.UPTIME_KUMA_CLOUDFLARED_TOKEN || undefined;
 
+<<<<<<< HEAD
 // 2FA / notp verification defaults
 const twoFAVerifyOptions = {
     window: 1,
     time: 30,
 };
 
+=======
+>>>>>>> upstream/master
 /**
  * Run unit test after the server is ready
  * @type {boolean}
@@ -191,7 +237,10 @@ const {
 const { statusPageSocketHandler } = require("./socket-handlers/status-page-socket-handler");
 const { databaseSocketHandler } = require("./socket-handlers/database-socket-handler");
 const { remoteBrowserSocketHandler } = require("./socket-handlers/remote-browser-socket-handler");
+<<<<<<< HEAD
 const TwoFA = require("./2fa");
+=======
+>>>>>>> upstream/master
 const StatusPage = require("./model/status_page");
 const {
     cloudflaredSocketHandler,
@@ -221,12 +270,15 @@ app.use(function (req, res, next) {
     next();
 });
 
+<<<<<<< HEAD
 /**
  * Show Setup Page
  * @type {boolean}
  */
 let needSetup = false;
 
+=======
+>>>>>>> upstream/master
 (async () => {
     // Create a data directory
     Database.initDataDir(args);
@@ -246,6 +298,12 @@ let needSetup = false;
         process.exit(1);
     }
 
+<<<<<<< HEAD
+=======
+    // Init Better Auth
+    auth();
+
+>>>>>>> upstream/master
     // Database should be ready now
     await server.initAfterDatabaseReady();
     server.entryPage = await Settings.get("entryPage");
@@ -294,6 +352,14 @@ let needSetup = false;
     });
 
     if (isDev) {
+<<<<<<< HEAD
+=======
+        app.options("/*", async (request, response) => {
+            allowDevOrigin(request, response);
+            response.end();
+        });
+
+>>>>>>> upstream/master
         app.use(express.urlencoded({ extended: true }));
         app.post("/test-webhook", async (request, response) => {
             log.debug("test", request.headers);
@@ -301,6 +367,7 @@ let needSetup = false;
             response.send("OK");
         });
 
+<<<<<<< HEAD
         app.post("/test-x-www-form-urlencoded", async (request, response) => {
             log.debug("test", request.headers);
             log.debug("test", request.body);
@@ -318,6 +385,13 @@ let needSetup = false;
             }
             await Database.connect();
 
+=======
+        app.get("/_e2e/take-sqlite-snapshot", async (request, response) => {
+            // Checkpoint WAL to flush all data to the main .db file, then copy.
+            // No close/reopen needed — the file is consistent after checkpoint.
+            await R.exec("PRAGMA wal_checkpoint(TRUNCATE)");
+            fs.cpSync(Database.sqlitePath, `${Database.sqlitePath}.e2e-snapshot`);
+>>>>>>> upstream/master
             response.send("Snapshot taken.");
         });
 
@@ -336,6 +410,15 @@ let needSetup = false;
 
             response.send("Snapshot restored.");
         });
+<<<<<<< HEAD
+=======
+
+        app.post("/test-x-www-form-urlencoded", async (request, response) => {
+            log.debug("test", request.headers);
+            log.debug("test", request.body);
+            response.send("OK");
+        });
+>>>>>>> upstream/master
     }
 
     // Robots.txt
@@ -376,6 +459,13 @@ let needSetup = false;
     const statusPageRouter = require("./routers/status-page-router");
     app.use(statusPageRouter);
 
+<<<<<<< HEAD
+=======
+    // better auth API Router
+    const betterAuthRouter = await createBetterAuthRouter();
+    app.use(betterAuthRouter);
+
+>>>>>>> upstream/master
     // Universal Route Handler, must be at the end of all express routes.
     app.get("*", async (_request, response) => {
         if (_request.originalUrl.startsWith("/upload/")) {
@@ -389,11 +479,16 @@ let needSetup = false;
     io.on("connection", async (socket) => {
         await sendInfo(socket, true);
 
+<<<<<<< HEAD
         if (needSetup) {
+=======
+        if (await needSetup()) {
+>>>>>>> upstream/master
             log.info("server", "Redirect to setup page");
             socket.emit("setup");
         }
 
+<<<<<<< HEAD
         // ***************************
         // Public Socket API
         // ***************************
@@ -734,6 +829,22 @@ let needSetup = false;
                 });
             }
         });
+=======
+        let session;
+
+        if (!(await Settings.get("disableAuth"))) {
+            session = await getSession(socket.request.headers.cookie);
+        } else {
+            session = await getDisableAuthSession();
+        }
+
+        if (session) {
+            socket.userID = session.user.id;
+            socket.session = session;
+            socket.emit("session", session.user.username);
+            log.debug("auth", `Session active:`, session.session.ipAddress, session.user.username);
+        }
+>>>>>>> upstream/master
 
         // ***************************
         // Auth Only API
@@ -1449,6 +1560,7 @@ let needSetup = false;
             }
         });
 
+<<<<<<< HEAD
         socket.on("changePassword", async (password, callback) => {
             try {
                 checkLogin(socket);
@@ -1481,6 +1593,8 @@ let needSetup = false;
             }
         });
 
+=======
+>>>>>>> upstream/master
         socket.on("getSettings", async (callback) => {
             try {
                 checkLogin(socket);
@@ -1513,7 +1627,11 @@ let needSetup = false;
                 // Enabled Auth + Want to Enable Auth => No Check
                 const currentDisabledAuth = await setting("disableAuth");
                 if (!currentDisabledAuth && data.disableAuth) {
+<<<<<<< HEAD
                     await doubleCheckPassword(socket, currentPassword);
+=======
+                    await doubleCheckPassword(socket.request.headers.cookie, currentPassword);
+>>>>>>> upstream/master
                 }
 
                 // Log out all clients if enabling auth
@@ -1735,6 +1853,11 @@ let needSetup = false;
             }
         });
 
+<<<<<<< HEAD
+=======
+        betterAuthSocketHandler(socket);
+
+>>>>>>> upstream/master
         // Status Page Socket Handler for admin only
         statusPageSocketHandler(socket);
         cloudflaredSocketHandler(socket);
@@ -1753,11 +1876,16 @@ let needSetup = false;
         // Better do anything after added all socket handlers here
         // ***************************
 
+<<<<<<< HEAD
         log.debug("auth", "check auto login");
         if (await setting("disableAuth")) {
             log.info("auth", "Disabled Auth: auto login to admin");
             await afterLogin(socket, await R.findOne("user"));
             socket.emit("autoLogin");
+=======
+        if (session) {
+            await afterLogin(socket, session.user);
+>>>>>>> upstream/master
         } else {
             socket.emit("loginRequired");
             log.debug("auth", "need auth");
@@ -1878,6 +2006,7 @@ async function initDatabase(testMode = false) {
 
     // Patch the database
     await Database.patch(port, hostname);
+<<<<<<< HEAD
 
     let jwtSecretBean = await R.findOne("setting", " `key` = ? ", ["jwtSecret"]);
 
@@ -1896,6 +2025,8 @@ async function initDatabase(testMode = false) {
     }
 
     server.jwtSecret = jwtSecretBean.value;
+=======
+>>>>>>> upstream/master
 }
 
 /**

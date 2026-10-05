@@ -1,4 +1,5 @@
 const { BeanModel } = require("redbean-node/dist/bean-model");
+<<<<<<< HEAD
 const passwordHash = require("../password-hash");
 const { R } = require("redbean-node");
 const jwt = require("jsonwebtoken");
@@ -48,5 +49,9 @@ class User extends BeanModel {
         );
     }
 }
+=======
+
+class User extends BeanModel {}
+>>>>>>> upstream/master
 
 module.exports = User;

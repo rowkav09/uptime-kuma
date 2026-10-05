@@ -1,5 +1,8 @@
 const childProcess = require("child_process");
+<<<<<<< HEAD
 const fs = require("fs");
+=======
+>>>>>>> upstream/master
 const platform = process.argv[2];
 
 if (!platform) {
@@ -7,6 +10,7 @@ if (!platform) {
     process.exit(1);
 }
 
+<<<<<<< HEAD
 if (platform === "linux/arm/v7") {
     console.log("Arch: armv7");
     if (fs.existsSync("./extra/healthcheck-armv7")) {
@@ -24,5 +28,7 @@ if (platform === "linux/arm/v7") {
     }
 }
 
+=======
+>>>>>>> upstream/master
 const output = childProcess.execSync("go build -x -o ./extra/healthcheck ./extra/healthcheck.go").toString("utf8");
 console.log(output);

@@ -1,14 +1,22 @@
 import axios from "axios";
+<<<<<<< HEAD
 import { getDevContainerServerHostname, isDevContainer } from "../util-frontend";
+=======
+import { baseURL } from "../auth-client";
+>>>>>>> upstream/master
 
 const env = process.env.NODE_ENV || "production";
 
 // change the axios base url for development
+<<<<<<< HEAD
 if (env === "development" && isDevContainer()) {
     axios.defaults.baseURL = location.protocol + "//" + getDevContainerServerHostname();
 } else if (env === "development" || localStorage.dev === "dev") {
     axios.defaults.baseURL = location.protocol + "//" + location.hostname + ":3001";
 }
+=======
+axios.defaults.baseURL = baseURL;
+>>>>>>> upstream/master
 
 export default {
     data() {

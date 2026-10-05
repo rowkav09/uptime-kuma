@@ -2,6 +2,10 @@ import dayjs from "dayjs";
 import { getTimeZones } from "@vvo/tzdb";
 import { localeDirection, currentLocale } from "./i18n";
 import { POSITION } from "vue-toastification";
+<<<<<<< HEAD
+=======
+import { baseURL } from "./auth-client";
+>>>>>>> upstream/master
 
 /**
  * Returns the offset from UTC in hours for the current locale.
@@ -76,6 +80,7 @@ export function setPageLocale() {
  * @returns {string} Base URL
  */
 export function getResBaseURL() {
+<<<<<<< HEAD
     const env = process.env.NODE_ENV;
     if (env === "development" && isDevContainer()) {
         return location.protocol + "//" + getDevContainerServerHostname();
@@ -106,6 +111,9 @@ export function getDevContainerServerHostname() {
 
     // eslint-disable-next-line no-undef
     return CODESPACE_NAME + "-3001." + GITHUB_CODESPACES_PORT_FORWARDING_DOMAIN;
+=======
+    return baseURL;
+>>>>>>> upstream/master
 }
 
 /**

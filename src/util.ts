@@ -1,12 +1,15 @@
 /* eslint-disable camelcase */
 /*!
 // Common Util for frontend and backend
+<<<<<<< HEAD
 //
 // DOT NOT MODIFY util.js!
 // Need to run "npm run tsc" to compile if there are any changes.
 //
 // Backend uses the compiled file util.js
 // Frontend uses util.ts
+=======
+>>>>>>> upstream/master
 */
 
 import dayjsFrontend from "dayjs";
@@ -17,9 +20,27 @@ import * as timezone from "dayjs/plugin/timezone";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import * as utc from "dayjs/plugin/utc";
 
+<<<<<<< HEAD
 import * as jsonata from "jsonata";
 
 export const isDev = process.env.NODE_ENV === "development";
+=======
+import jsonata from "jsonata";
+
+/**
+ * @deprecated Use isDevEnv, because NODE_ENV could be set after this
+ */
+export const isDev = process.env.NODE_ENV === "development";
+
+/**
+ * Check if NODE_ENV is development
+ * @returns yes or no
+ */
+export function isDevEnv() {
+    return process.env.NODE_ENV === "development";
+}
+
+>>>>>>> upstream/master
 export const isNode = typeof process !== "undefined" && process?.versions?.node;
 
 /**
@@ -28,6 +49,16 @@ export const isNode = typeof process !== "undefined" && process?.versions?.node;
  */
 const dayjs = isNode ? require("dayjs") : dayjsFrontend;
 
+<<<<<<< HEAD
+=======
+export const devOriginList = [
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:3001",
+    "http://localhost:3000",
+    "http://localhost:3001",
+];
+
+>>>>>>> upstream/master
 export const appName = "Uptime Kuma";
 export const DOWN = 0;
 export const UP = 1;
@@ -136,11 +167,14 @@ const consoleLevelColors = {
     debug: CONSOLE_STYLE_FgGray,
 } as const;
 
+<<<<<<< HEAD
 /**
  * Flip the status of s
  * @param s input status: UP or DOWN
  * @returns {number} UP or DOWN
  */
+=======
+>>>>>>> upstream/master
 export const badgeConstants = {
     naColor: "#999",
     defaultUpColor: "#66c20a",
@@ -163,8 +197,13 @@ export const badgeConstants = {
 
 /**
  * Flip the status of s between UP and DOWN if this is possible
+<<<<<<< HEAD
  * @param s {number} status
  * @returns {number} flipped status
+=======
+ * @param s status
+ * @returns flipped status
+>>>>>>> upstream/master
  */
 export function flipStatus(s: number) {
     if (s === UP) {
@@ -181,7 +220,10 @@ export function flipStatus(s: number) {
 /**
  * Delays for specified number of seconds
  * @param ms Number of milliseconds to sleep for
+<<<<<<< HEAD
  * @returns {Promise<void>} Promise that resolves after ms
+=======
+>>>>>>> upstream/master
  */
 export function sleep(ms: number) {
     return new Promise((resolve) => setTimeout(resolve, ms));
@@ -190,7 +232,11 @@ export function sleep(ms: number) {
 /**
  * PHP's ucfirst
  * @param str string input
+<<<<<<< HEAD
  * @returns {string} string with first letter capitalized
+=======
+ * @returns string with first letter capitalized
+>>>>>>> upstream/master
  */
 export function ucfirst(str: string) {
     if (!str) {
@@ -204,7 +250,10 @@ export function ucfirst(str: string) {
 /**
  * @deprecated Use log.debug (https://github.com/louislam/uptime-kuma/pull/910)
  * @param msg Message to write
+<<<<<<< HEAD
  * @returns {void}
+=======
+>>>>>>> upstream/master
  */
 export function debug(msg: unknown) {
     log.log("", "debug", msg);
@@ -253,7 +302,10 @@ class Logger {
      * @param module The module the log comes from
      * @param level Log level. One of info, warn, error, debug.
      * @param msg Message to write
+<<<<<<< HEAD
      * @returns {void}
+=======
+>>>>>>> upstream/master
      */
     log(module: string, level: LogLevel, ...msg: unknown[]) {
         if (level === "debug" && !isDev) {
@@ -435,7 +487,11 @@ export class TimeLogger {
  * Returns a random number between min (inclusive) and max (exclusive)
  * @param min minumim value, inclusive
  * @param max maximum value, exclusive
+<<<<<<< HEAD
  * @returns {number} Random number
+=======
+ * @returns Random number
+>>>>>>> upstream/master
  */
 export function getRandomArbitrary(min: number, max: number) {
     return Math.random() * (max - min) + min;
@@ -615,7 +671,11 @@ export function isoToUTCDateTime(input: string) {
 
 /**
  * @param input valid datetime string
+<<<<<<< HEAD
  * @returns {string} ISO DateTime string
+=======
+ * @returns ISO DateTime string
+>>>>>>> upstream/master
  */
 export function utcToISODateTime(input: string) {
     return dayjs.utc(input).toISOString();
@@ -773,3 +833,36 @@ export const TYPES_WITH_DOMAIN_EXPIRY_SUPPORT_VIA_FIELD = {
     "tailscale-ping": "hostname",
     "sip-options": "hostname",
 } as const;
+<<<<<<< HEAD
+=======
+
+/**
+ * @param res Response object from fetch
+ */
+export async function checkFetch(res: Response): Promise<void> {
+    let data;
+
+    try {
+        if (!res.ok) {
+            data = await res.json();
+        }
+    } catch (e) {
+        throw new Error("Failed to fetch without message: " + res.status);
+    }
+
+    if (data) {
+        if (data.msg) {
+            throw new Error(data.msg);
+        } else {
+            throw new Error(JSON.stringify(data));
+        }
+    }
+
+    const contentType = res.headers.get("content-type");
+
+    // if response is not in json type
+    if (!contentType || !contentType.startsWith("application/json")) {
+        throw new Error("Response is not in JSON format");
+    }
+}
+>>>>>>> upstream/master

@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 ARG BASE_IMAGE=louislam/uptime-kuma:base2
 
 ############################################
@@ -6,11 +7,25 @@ ARG BASE_IMAGE=louislam/uptime-kuma:base2
 # Check file: builder-go.dockerfile
 ############################################
 FROM louislam/uptime-kuma:builder-go AS build_healthcheck
+=======
+ARG BASE_IMAGE=louislam/uptime-kuma:base3
+
+############################################
+# Build in Golang
+
+# Check file: builder-go.dockerfile
+############################################
+FROM louislam/uptime-kuma:builder-go3 AS build_healthcheck
+>>>>>>> upstream/master
 
 ############################################
 # Build in Node.js
 ############################################
+<<<<<<< HEAD
 FROM louislam/uptime-kuma:base2 AS build
+=======
+FROM louislam/uptime-kuma:base3 AS build
+>>>>>>> upstream/master
 USER node
 WORKDIR /app
 
@@ -59,7 +74,11 @@ USER node
 ############################################
 # Build an image for testing pr
 ############################################
+<<<<<<< HEAD
 FROM louislam/uptime-kuma:base2 AS pr-test2
+=======
+FROM louislam/uptime-kuma:base3 AS pr-test2
+>>>>>>> upstream/master
 WORKDIR /app
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=1
 
@@ -92,7 +111,11 @@ CMD ["npm", "run", "start-pr-test"]
 ############################################
 # Upload the artifact to Github
 ############################################
+<<<<<<< HEAD
 FROM louislam/uptime-kuma:base2 AS upload-artifact
+=======
+FROM louislam/uptime-kuma:base3 AS upload-artifact
+>>>>>>> upstream/master
 WORKDIR /
 RUN apt update && \
     apt --yes install curl file

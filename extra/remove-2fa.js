@@ -1,5 +1,6 @@
 console.log("== Uptime Kuma Remove 2FA Tool ==");
 console.log("Loading the database");
+<<<<<<< HEAD
 
 const Database = require("../server/database");
 const { R } = require("redbean-node");
@@ -62,3 +63,8 @@ if (!process.env.TEST_BACKEND) {
 module.exports = {
     main,
 };
+=======
+console.log("TODO");
+
+// TODO
+>>>>>>> upstream/master

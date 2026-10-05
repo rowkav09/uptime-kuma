@@ -29,10 +29,17 @@ class Settings {
         // Start cache clear if not started yet
         if (!Settings.cacheCleaner) {
             Settings.cacheCleaner = setInterval(() => {
+<<<<<<< HEAD
                 log.debug("settings", "Cache Cleaner is just started.");
                 for (key in Settings.cacheList) {
                     if (Date.now() - Settings.cacheList[key].timestamp > 60 * 1000) {
                         log.debug("settings", "Cache Cleaner deleted: " + key);
+=======
+                //log.debug("settings", "Cache Cleaner is just started.");
+                for (key in Settings.cacheList) {
+                    if (Date.now() - Settings.cacheList[key].timestamp > 60 * 1000) {
+                        //log.debug("settings", "Cache Cleaner deleted: " + key);
+>>>>>>> upstream/master
                         delete Settings.cacheList[key];
                     }
                 }
