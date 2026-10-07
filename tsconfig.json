@@ -2,13 +2,8 @@
     "compileOnSave": true,
     "compilerOptions": {
         "newLine": "LF",
-<<<<<<< HEAD
-        "target": "es2018",
-        "module": "commonjs",
-=======
         "target": "esnext",
         "module": "esnext",
->>>>>>> upstream/master
         "lib": ["es2020", "DOM"],
         "declaration": false,
         "removeComments": true,

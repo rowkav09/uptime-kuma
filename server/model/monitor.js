@@ -51,10 +51,6 @@ const version = require("../../package.json").version;
 const apicache = require("../modules/apicache");
 const { UptimeKumaServer } = require("../uptime-kuma-server");
 const { DockerHost } = require("../docker");
-<<<<<<< HEAD
-const jwt = require("jsonwebtoken");
-=======
->>>>>>> upstream/master
 const crypto = require("crypto");
 const { UptimeCalculator } = require("../uptime-calculator");
 const { CookieJar } = require("tough-cookie");
@@ -120,11 +116,7 @@ class Monitor extends BeanModel {
         let screenshot = null;
 
         if (this.type === "real-browser") {
-<<<<<<< HEAD
-            screenshot = "/screenshots/" + jwt.sign(this.id, UptimeKumaServer.getInstance().jwtSecret) + ".png";
-=======
             screenshot = "/screenshots/" + this.id + ".png";
->>>>>>> upstream/master
         }
 
         const path = preloadData.paths.get(this.id) || [];
@@ -1323,11 +1315,7 @@ class Monitor extends BeanModel {
      * @param {Server} io Socket server instance
      * @param {number} monitorID ID of monitor to send
      * @param {number} userID ID of user to send to
-<<<<<<< HEAD
-     * @returns {void}
-=======
      * @returns {Promise<void>}
->>>>>>> upstream/master
      */
     static async sendStats(io, monitorID, userID) {
         const hasClients = getTotalClientInRoom(io, userID) > 0;

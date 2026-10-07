@@ -146,10 +146,7 @@
 <script>
 import Confirm from "../../components/Confirm.vue";
 import TwoFADialog from "../../components/TwoFADialog.vue";
-<<<<<<< HEAD
-=======
 import { authClient } from "../../auth-client";
->>>>>>> upstream/master
 
 export default {
     components: {
@@ -189,28 +186,6 @@ export default {
     methods: {
         /**
          * Check new passwords match before saving them
-<<<<<<< HEAD
-         * @returns {void}
-         */
-        savePassword() {
-            if (this.password.newPassword !== this.password.repeatNewPassword) {
-                this.invalidPassword = true;
-            } else {
-                this.$root.getSocket().emit("changePassword", this.password, (res) => {
-                    this.$root.toastRes(res);
-                    if (res.ok) {
-                        this.password.currentPassword = "";
-                        this.password.newPassword = "";
-                        this.password.repeatNewPassword = "";
-
-                        // Update token of the current session
-                        if (res.token) {
-                            this.$root.storage().token = res.token;
-                            this.$root.socket.token = res.token;
-                        }
-                    }
-                });
-=======
          * @returns {Promise<void>}
          */
         async savePassword() {
@@ -230,7 +205,6 @@ export default {
                     this.password.newPassword = "";
                     this.password.repeatNewPassword = "";
                 }
->>>>>>> upstream/master
             }
         },
 
@@ -246,10 +220,6 @@ export default {
             this.saveSettings(() => {
                 this.password.currentPassword = "";
                 this.$root.username = null;
-<<<<<<< HEAD
-                this.$root.socket.token = "autoLogin";
-=======
->>>>>>> upstream/master
             }, this.password.currentPassword);
         },
 
@@ -260,10 +230,6 @@ export default {
         enableAuth() {
             this.settings.disableAuth = false;
             this.saveSettings();
-<<<<<<< HEAD
-            this.$root.storage().removeItem("token");
-=======
->>>>>>> upstream/master
             location.reload();
         },
 

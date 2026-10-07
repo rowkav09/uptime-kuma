@@ -13,11 +13,7 @@ test.describe("Uptime Kuma Setup", () => {
      */
 
     test("setup sqlite", async ({ page }, testInfo) => {
-<<<<<<< HEAD
-        await page.goto("./");
-=======
         await page.goto("./setup-database");
->>>>>>> upstream/master
         await page.getByText("SQLite").click();
         await page.getByRole("button", { name: "Next" }).click();
         await screenshot(testInfo, page);
@@ -25,16 +21,6 @@ test.describe("Uptime Kuma Setup", () => {
     });
 
     test("setup admin", async ({ page }) => {
-<<<<<<< HEAD
-        await page.goto("./");
-        await page.getByPlaceholder("Username").click();
-        await page.getByPlaceholder("Username").fill("admin");
-        await page.getByPlaceholder("Username").press("Tab");
-        await page.getByPlaceholder("Password", { exact: true }).fill("admin123");
-        await page.getByPlaceholder("Password", { exact: true }).press("Tab");
-        await page.getByPlaceholder("Repeat Password").fill("admin123");
-        await page.getByRole("button", { name: "Create" }).click();
-=======
         await page.goto("./setup");
         await page.getByRole("textbox", { name: "Username" }).click();
         await page.getByRole("textbox", { name: "Username" }).fill("admin");
@@ -43,7 +29,6 @@ test.describe("Uptime Kuma Setup", () => {
         await page.getByRole("button", { name: "Create" }).click();
         // User is auto-logged in and redirected to dashboard
         await page.waitForURL("/dashboard");
->>>>>>> upstream/master
     });
 
     /*
@@ -55,8 +40,6 @@ test.describe("Uptime Kuma Setup", () => {
         await login(page);
     });
 
-<<<<<<< HEAD
-=======
     test("failed login shows error alert", async ({ page }, testInfo) => {
         await page.goto("./dashboard");
         await page.getByPlaceholder("Username").fill("admin");
@@ -66,7 +49,6 @@ test.describe("Uptime Kuma Setup", () => {
         await screenshot(testInfo, page);
     });
 
->>>>>>> upstream/master
     test("logout", async ({ page }) => {
         await page.goto("./dashboard");
         await login(page);

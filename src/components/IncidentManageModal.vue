@@ -6,11 +6,7 @@
                     <h5 class="modal-title">
                         {{ $t("Edit Incident") }}
                     </h5>
-<<<<<<< HEAD
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-=======
                     <button type="button" class="btn-close" data-bs-dismiss="modal" :aria-label="$t('Close')"></button>
->>>>>>> upstream/master
                 </div>
                 <div class="modal-body">
                     <form @submit.prevent="submit">

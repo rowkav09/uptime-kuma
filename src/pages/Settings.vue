@@ -25,15 +25,7 @@
                     </router-link>
 
                     <!-- Logout Button -->
-<<<<<<< HEAD
-                    <a
-                        v-if="$root.isMobile && $root.loggedIn && $root.socket.token !== 'autoLogin'"
-                        class="logout"
-                        @click.prevent="$root.logout"
-                    >
-=======
                     <a v-if="$root.isMobile && $root.loggedIn" class="logout" @click.prevent="$root.logout">
->>>>>>> upstream/master
                         <div class="menu-item">
                             <font-awesome-icon icon="sign-out-alt" />
                             {{ $t("Logout") }}

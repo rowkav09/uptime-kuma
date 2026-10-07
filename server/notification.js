@@ -26,10 +26,7 @@ const Gorush = require("./notification-providers/gorush");
 const Gotify = require("./notification-providers/gotify");
 const GrafanaOncall = require("./notification-providers/grafana-oncall");
 const HomeAssistant = require("./notification-providers/home-assistant");
-<<<<<<< HEAD
-=======
 const Indigo = require("./notification-providers/indigo");
->>>>>>> upstream/master
 const HeiiOnCall = require("./notification-providers/heii-oncall");
 const Keep = require("./notification-providers/keep");
 const Kook = require("./notification-providers/kook");
@@ -154,10 +151,7 @@ class Notification {
             new Gotify(),
             new GrafanaOncall(),
             new HomeAssistant(),
-<<<<<<< HEAD
-=======
             new Indigo(),
->>>>>>> upstream/master
             new HeiiOnCall(),
             new Keep(),
             new Kook(),

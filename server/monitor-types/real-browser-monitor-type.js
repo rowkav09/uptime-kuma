@@ -5,10 +5,6 @@ const { Settings } = require("../settings");
 const childProcess = require("child_process");
 const path = require("path");
 const Database = require("../database");
-<<<<<<< HEAD
-const jwt = require("jsonwebtoken");
-=======
->>>>>>> upstream/master
 const config = require("../config");
 const { RemoteBrowser } = require("../remote-browser");
 const { commandExists } = require("../util-server");
@@ -278,11 +274,7 @@ class RealBrowserMonitorType extends MonitorType {
                 await page.waitForTimeout(monitor.screenshot_delay);
             }
 
-<<<<<<< HEAD
-            let filename = jwt.sign(monitor.id, server.jwtSecret) + ".png";
-=======
             let filename = monitor.id + ".png";
->>>>>>> upstream/master
 
             await page.screenshot({
                 path: path.join(Database.screenshotDir, filename),

@@ -70,10 +70,7 @@
 </template>
 
 <script>
-<<<<<<< HEAD
-=======
 import { login, verifyTotp } from "../auth-client";
->>>>>>> upstream/master
 import HiddenInput from "./HiddenInput.vue";
 
 export default {
@@ -114,20 +111,6 @@ export default {
          * Submit the user details and attempt to log in
          * @returns {void}
          */
-<<<<<<< HEAD
-        submit() {
-            this.processing = true;
-
-            this.$root.login(this.username, this.password, this.token, (res) => {
-                this.processing = false;
-
-                if (res.tokenRequired) {
-                    this.tokenRequired = true;
-                } else {
-                    this.res = res;
-                }
-            });
-=======
         async submit() {
             this.processing = true;
 
@@ -146,7 +129,6 @@ export default {
             } finally {
                 this.processing = false;
             }
->>>>>>> upstream/master
         },
     },
 };
