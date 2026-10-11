@@ -9,13 +9,9 @@ describe("SNMPMonitorType", () => {
     test(
         "check() sets heartbeat to UP when SNMP agent responds",
         {
-<<<<<<< HEAD
-            skip: !!process.env.CI && (process.platform !== "linux" || process.arch !== "x64"),
-=======
             skip:
                 (!!process.env.CI && (process.platform !== "linux" || process.arch !== "x64")) ||
                 process.env.SKIP_TESTCONTAINER,
->>>>>>> upstream/master
         },
         async () => {
             const container = await new GenericContainer("polinux/snmpd").withExposedPorts("161/udp").start();
@@ -58,13 +54,9 @@ describe("SNMPMonitorType", () => {
     test(
         "check() throws when SNMP agent does not respond",
         {
-<<<<<<< HEAD
-            skip: !!process.env.CI && (process.platform !== "linux" || process.arch !== "x64"),
-=======
             skip:
                 (!!process.env.CI && (process.platform !== "linux" || process.arch !== "x64")) ||
                 process.env.SKIP_TESTCONTAINER,
->>>>>>> upstream/master
         },
         async () => {
             const monitor = {
