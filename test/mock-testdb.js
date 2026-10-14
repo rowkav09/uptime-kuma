@@ -1,10 +1,6 @@
 const { sync: rimrafSync } = require("rimraf");
 const Database = require("../server/database");
-<<<<<<< HEAD
-
-=======
 const { Settings } = require("../server/settings");
->>>>>>> upstream/master
 class TestDB {
     dataDir;
 
@@ -24,9 +20,6 @@ class TestDB {
 
     async destroy() {
         await Database.close();
-<<<<<<< HEAD
-        this.dataDir && rimrafSync(this.dataDir);
-=======
         Settings.stopCacheCleaner();
         if (this.dataDir) {
             try {
@@ -36,7 +29,6 @@ class TestDB {
                 console.error(e);
             }
         }
->>>>>>> upstream/master
     }
 }
 

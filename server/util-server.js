@@ -1,26 +1,15 @@
-<<<<<<< HEAD
-=======
 import { checkLogin as betterAuthCheckLogin } from "./better-auth";
 
->>>>>>> upstream/master
 const ping = require("@louislam/ping");
 const { R } = require("redbean-node");
 const {
     log,
-<<<<<<< HEAD
-    genSecret,
-=======
->>>>>>> upstream/master
     badgeConstants,
     PING_PACKET_SIZE_DEFAULT,
     PING_GLOBAL_TIMEOUT_DEFAULT,
     PING_COUNT_DEFAULT,
     PING_PER_REQUEST_TIMEOUT_DEFAULT,
 } = require("../src/util");
-<<<<<<< HEAD
-const passwordHash = require("./password-hash");
-=======
->>>>>>> upstream/master
 const iconv = require("iconv-lite");
 const chardet = require("chardet");
 const chroma = require("chroma-js");
@@ -46,34 +35,6 @@ const { Kafka, SASLOptions } = require("kafkajs");
 const crypto = require("crypto");
 
 const isWindows = process.platform === /^win/.test(process.platform);
-<<<<<<< HEAD
-/**
- * Init or reset JWT secret
- * @returns {Promise<Bean>} JWT secret
- */
-exports.initJWTSecret = async () => {
-    let jwtSecretBean = await R.findOne("setting", " `key` = ? ", ["jwtSecret"]);
-
-    if (!jwtSecretBean) {
-        jwtSecretBean = R.dispense("setting");
-        jwtSecretBean.key = "jwtSecret";
-    }
-
-    jwtSecretBean.value = await passwordHash.generate(genSecret());
-    await R.store(jwtSecretBean);
-    return jwtSecretBean;
-};
-
-/**
- * Decodes a jwt and returns the payload portion without verifying the jwt.
- * @param {string} jwt The input jwt as a string
- * @returns {object} Decoded jwt payload object
- */
-exports.decodeJwt = (jwt) => {
-    return JSON.parse(Buffer.from(jwt.split(".")[1], "base64").toString());
-};
-=======
->>>>>>> upstream/master
 
 /**
  * Gets an Access Token from an oidc/oauth2 provider
@@ -628,10 +589,7 @@ exports.getTotalClientInRoom = (io, roomName) => {
 };
 
 /**
-<<<<<<< HEAD
-=======
  * @deprecated Use allowDevOrigin
->>>>>>> upstream/master
  * Allow CORS all origins if development
  * @param {object} res Response object from axios
  * @returns {void}
@@ -643,10 +601,7 @@ exports.allowDevAllOrigin = (res) => {
 };
 
 /**
-<<<<<<< HEAD
-=======
  * @deprecated Use allowOrigin
->>>>>>> upstream/master
  * Allow CORS all origins
  * @param {object} res Response object from axios
  * @returns {void}
@@ -658,8 +613,6 @@ exports.allowAllOrigin = (res) => {
 };
 
 /**
-<<<<<<< HEAD
-=======
  * Allow CORS all origins if development
  * @param {Request} req Express request object
  * @param {Response} res Express response object
@@ -687,42 +640,13 @@ exports.allowOrigin = (req, res) => {
 
 /**
  * @deprecated Use better-auth's checkLogin
->>>>>>> upstream/master
  * Check if a user is logged in
  * @param {Socket} socket Socket instance
  * @returns {void}
  * @throws The user is not logged in
  */
 exports.checkLogin = (socket) => {
-<<<<<<< HEAD
-    if (!socket.userID) {
-        throw new Error("You are not logged in.");
-    }
-};
-
-/**
- * For logged-in users, double-check the password
- * @param {Socket} socket Socket.io instance
- * @param {string} currentPassword Password to validate
- * @returns {Promise<Bean>} User
- * @throws The current password is not a string
- * @throws The provided password is not correct
- */
-exports.doubleCheckPassword = async (socket, currentPassword) => {
-    if (typeof currentPassword !== "string") {
-        throw new Error("Wrong data type?");
-    }
-
-    let user = await R.findOne("user", " id = ? AND active = 1 ", [socket.userID]);
-
-    if (!user || !passwordHash.verify(currentPassword, user.password)) {
-        throw new Error("Incorrect current password");
-    }
-
-    return user;
-=======
     betterAuthCheckLogin(socket);
->>>>>>> upstream/master
 };
 
 /**

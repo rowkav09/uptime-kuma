@@ -22,22 +22,11 @@ jobs:
       contents: read
       issues: write
     steps:
-<<<<<<< HEAD
-      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
-=======
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
->>>>>>> upstream/master
         with:
           persist-credentials: false
 
       - name: Install opencode
-<<<<<<< HEAD
-        run: curl -fsSL https://opencode.ai/install | bash
-
-      - name: Check for duplicate issues
-        env:
-          OPENCODE_API_KEY: ${{ secrets.OPENCODE_API_KEY }}
-=======
         run: curl -fsSL https://opencode.ai/v2/install | bash
 
       - uses: $/.github/actions/setup-atlascloud
@@ -47,7 +36,6 @@ jobs:
       - name: Check for duplicate issues
         env:
           ATLASCLOUD_API_KEY: ${{ secrets.ATLASCLOUD_API_KEY }}
->>>>>>> upstream/master
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           OPENCODE_PERMISSION: |
             {
@@ -58,14 +46,10 @@ jobs:
               "webfetch": "deny"
             }
         run: |
-<<<<<<< HEAD
-          opencode run -m opencode/big-pickle "An issue has been submitted (or a duplicate check was requested on it):
-=======
           mapfile -t models < <(jq -r '.[]' .github/opencode-models.json)
 
           PROMPT=$(cat <<'PROMPT_EOF'
           An issue has been submitted (or a duplicate check was requested on it):
->>>>>>> upstream/master
 
           Issue number: ${{ github.event.issue.number }}
 
@@ -91,9 +75,6 @@ jobs:
 
           Feel free to ignore if none of these address your specific case.'
 
-<<<<<<< HEAD
-          If no clear duplicates or related issues are found, do not comment."
-=======
           If no clear duplicates or related issues are found, do not comment.
           PROMPT_EOF
           )
@@ -109,4 +90,3 @@ jobs:
 
           echo "::error::All fallback models failed."
           exit 1
->>>>>>> upstream/master
