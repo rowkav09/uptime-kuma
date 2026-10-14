@@ -66,15 +66,10 @@ async function testMqtt(
 describe(
     "MqttMonitorType",
     {
-<<<<<<< HEAD
-        concurrency: 4,
-        skip: !!process.env.CI && (process.platform !== "linux" || process.arch !== "x64"),
-=======
         concurrency: 1,
         skip:
             (!!process.env.CI && (process.platform !== "linux" || process.arch !== "x64")) ||
             process.env.SKIP_TESTCONTAINER,
->>>>>>> upstream/master
     },
     () => {
         test("check() sets status to UP when keyword is found in message (type=default)", async () => {
