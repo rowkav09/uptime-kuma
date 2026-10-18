@@ -1,7 +1,11 @@
 import { betterAuth } from "better-auth";
 // @ts-ignore
 import * as Database from "./database.js";
+<<<<<<< HEAD
 import { genSecret, log } from "../src/util";
+=======
+import { genSecret, isDevEnv, log } from "../src/util";
+>>>>>>> upstream/master
 import { R } from "redbean-node";
 import { username } from "better-auth/plugins";
 import { admin } from "better-auth/plugins";
@@ -117,6 +121,12 @@ function createAuthInstance() {
             disableSignUp: true,
         },
         rateLimit: {
+<<<<<<< HEAD
+=======
+            // Disabled in development (e.g. E2E tests) to avoid throttling rapid logins
+            enabled: !isDevEnv(),
+
+>>>>>>> upstream/master
             // Seconds
             window: 60,
 
