@@ -12,12 +12,6 @@ import * as timezone from "dayjs/plugin/timezone";
 import * as utc from "dayjs/plugin/utc";
 
 import jsonata from "jsonata";
-<<<<<<< HEAD
-
-/**
- * @deprecated Use isDevEnv, because NODE_ENV could be set after this
- */
-export const isDev = process.env.NODE_ENV === "development";
 
 /**
  * Check if NODE_ENV is development
@@ -27,17 +21,6 @@ export function isDevEnv() {
     return process.env.NODE_ENV === "development";
 }
 
-=======
-
-/**
- * Check if NODE_ENV is development
- * @returns yes or no
- */
-export function isDevEnv() {
-    return process.env.NODE_ENV === "development";
-}
-
->>>>>>> upstream/master
 export const isNode = typeof process !== "undefined" && process?.versions?.node;
 
 /**

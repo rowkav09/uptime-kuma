@@ -4,11 +4,7 @@ const fs = require("fs");
 const http = require("http");
 const { Server } = require("socket.io");
 const { R } = require("redbean-node");
-<<<<<<< HEAD
-const { log, isDev, devOriginList } = require("../src/util");
-=======
 const { log, isDevEnv, devOriginList } = require("../src/util");
->>>>>>> upstream/master
 const Database = require("./database");
 const util = require("util");
 const { Settings } = require("./settings");

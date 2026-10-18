@@ -50,19 +50,6 @@ export async function createBetterAuthRouter() {
 
                 const username = req.body.username;
                 const password = req.body.password;
-<<<<<<< HEAD
-                const user = await auth().api.createUser({
-                    body: {
-                        name: username,
-                        email: `${username}@noreply.uptime-kuma.internal`,
-                        password,
-                        role: "admin",
-                        data: {
-                            username,
-                        },
-                    },
-                });
-=======
 
                 let user;
                 try {
@@ -87,7 +74,6 @@ export async function createBetterAuthRouter() {
                     } catch (cleanupError) {}
                     throw createError;
                 }
->>>>>>> upstream/master
 
                 log.debug("auth", "First user created:", user);
 

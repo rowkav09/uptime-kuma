@@ -3,11 +3,7 @@
  * node "server/server.js"
  * DO NOT require("./server") in other modules, it likely creates circular dependency!
  */
-<<<<<<< HEAD
-import { getRandomInt, isDev, log, sleep } from "../src/util";
-=======
 import { getRandomInt, isDevEnv, log, sleep } from "../src/util";
->>>>>>> upstream/master
 import { auth, doubleCheckPassword, getDisableAuthSession, getSession } from "./better-auth";
 import { createBetterAuthRouter, needSetup } from "./routers/better-auth-router";
 import { betterAuthSocketHandler } from "./socket-handlers/better-auth-socket-handler";
@@ -278,11 +274,7 @@ app.use(function (req, res, next) {
         });
     });
 
-<<<<<<< HEAD
-    if (isDev) {
-=======
     if (isDevEnv()) {
->>>>>>> upstream/master
         app.options("/*", async (request, response) => {
             allowDevOrigin(request, response);
             response.end();
