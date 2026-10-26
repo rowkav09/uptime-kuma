@@ -10,11 +10,19 @@ class Apprise extends NotificationProvider {
     async send(notification, msg, monitorJSON = null, heartbeatJSON = null) {
         const okMsg = "Sent Successfully.";
 
+<<<<<<< HEAD
         const args = ["-vv", "-b", msg, notification.appriseURL];
+=======
+        const args = ["-vv", "-b", msg];
+>>>>>>> upstream/master
         if (notification.title) {
             args.push("-t");
             args.push(notification.title);
         }
+<<<<<<< HEAD
+=======
+        args.push("--", notification.appriseURL);
+>>>>>>> upstream/master
         const s = await childProcessAsync.spawn("apprise", args, {
             encoding: "utf8",
         });

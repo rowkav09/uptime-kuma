@@ -15,6 +15,10 @@
                 <input
                     class="form-check-input select-input"
                     type="checkbox"
+<<<<<<< HEAD
+=======
+                    :data-testid="'monitor-select-' + monitor.id"
+>>>>>>> upstream/master
                     :aria-label="$t('Check/Uncheck')"
                     :checked="isSelected(monitor.id)"
                     @click.stop="toggleSelection"
@@ -28,7 +32,16 @@
                             <Uptime :monitor="monitor" type="24" :pill="true" />
                         </div>
                         <div class="d-flex align-items-center gap-2 flex-fill" style="min-width: 0">
+<<<<<<< HEAD
                             <span v-if="hasChildren" class="collapse-padding" @click.prevent="changeCollapsed">
+=======
+                            <span
+                                v-if="hasChildren"
+                                class="collapse-padding"
+                                data-testid="monitor-collapse"
+                                @click.prevent="changeCollapsed"
+                            >
+>>>>>>> upstream/master
                                 <font-awesome-icon
                                     icon="chevron-down"
                                     class="animated"
@@ -49,11 +62,15 @@
                             </div>
                         </div>
                     </div>
+<<<<<<< HEAD
                     <div
                         v-show="$root.userHeartbeatBar == 'normal'"
                         :key="$root.userHeartbeatBar"
                         class="col-3 col-xl-6"
                     >
+=======
+                    <div v-if="$root.userHeartbeatBar == 'normal'" :key="$root.userHeartbeatBar" class="col-3 col-xl-6">
+>>>>>>> upstream/master
                         <HeartbeatBar ref="heartbeatBar" size="small" :monitor-id="monitor.id" />
                     </div>
                 </div>
@@ -72,6 +89,10 @@
                     v-for="(item, index) in sortedChildMonitorList"
                     :key="index"
                     :monitor="item"
+<<<<<<< HEAD
+=======
+                    :children-by-parent="childrenByParent"
+>>>>>>> upstream/master
                     :isSelectMode="isSelectMode"
                     :isSelected="isSelected"
                     :select="select"
@@ -99,6 +120,14 @@ export default {
         Tag,
     },
     props: {
+<<<<<<< HEAD
+=======
+        /** Parent id -> children index, shared by the whole list */
+        childrenByParent: {
+            type: Map,
+            default: () => new Map(),
+        },
+>>>>>>> upstream/master
         /** Monitor this represents */
         monitor: {
             type: Object,
@@ -148,10 +177,14 @@ export default {
     },
     computed: {
         sortedChildMonitorList() {
+<<<<<<< HEAD
             let result = Object.values(this.$root.monitorList);
 
             // Get children
             result = result.filter((childMonitor) => childMonitor.parent === this.monitor.id);
+=======
+            let result = this.childrenByParent.get(this.monitor.id) ?? [];
+>>>>>>> upstream/master
 
             // Run filter on children
             result = result.filter(this.filterFunc);
@@ -276,6 +309,7 @@ export default {
                 return;
             }
 
+<<<<<<< HEAD
             // Save original parent so we can revert locally if server returns error
             const originalParent = draggedMonitor.parent;
 
@@ -307,6 +341,60 @@ export default {
                     this.$root.monitorList[draggedMonitorId].parent = originalParent;
                 }
             }
+=======
+            const parentId = this.monitor.id;
+            if (draggedMonitor.parent === parentId) {
+                return;
+            }
+
+            // Never move a group into itself or one of its descendants
+            let ancestorId = parentId;
+            while (ancestorId != null) {
+                if (ancestorId === draggedMonitorId) {
+                    this.$root.toastError("Cannot move a group into its own subgroup");
+                    return;
+                }
+                ancestorId = this.$root.monitorList[ancestorId]?.parent ?? null;
+            }
+
+            // Save original parent so we can revert locally if server returns error
+            const originalParent = draggedMonitor.parent;
+            const revert = () => {
+                if (this.$root.monitorList[draggedMonitorId]) {
+                    this.$root.monitorList[draggedMonitorId].parent = originalParent;
+                }
+            };
+
+            // Optimistically update local state so UI updates immediately
+            this.$root.monitorList[draggedMonitorId].parent = parentId;
+
+            // The dashboard list only holds summary fields, so load the full monitor first:
+            // saving the summary would clear the monitor's other settings
+            this.$root.getSocket().emit("getMonitor", draggedMonitorId, (res) => {
+                if (!res || !res.ok) {
+                    revert();
+                    return;
+                }
+
+                const monitorToSave = res.monitor;
+                monitorToSave.parent = parentId;
+
+                try {
+                    this.$root.getSocket().emit("editMonitor", monitorToSave, (saveRes) => {
+                        if (!saveRes || !saveRes.ok) {
+                            revert();
+                            if (saveRes && saveRes.msg) {
+                                this.$root.toastError(saveRes.msg);
+                            }
+                        } else {
+                            this.$root.toastRes(saveRes);
+                        }
+                    });
+                } catch (e) {
+                    revert();
+                }
+            });
+>>>>>>> upstream/master
         },
         /**
          * Get URL of monitor

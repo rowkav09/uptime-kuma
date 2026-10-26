@@ -1,4 +1,5 @@
 const { MonitorType } = require("./monitor-type");
+<<<<<<< HEAD
 const { UP, PING_GLOBAL_TIMEOUT_DEFAULT: TIMEOUT, log } = require("../../src/util");
 const { checkCertificate } = require("../util-server");
 const tls = require("tls");
@@ -69,6 +70,12 @@ function getTlsAlertName(alertNumber) {
 }
 
 /**
+=======
+const { UP } = require("../../src/util");
+const tcpp = require("tcp-ping");
+
+/**
+>>>>>>> upstream/master
  * Send TCP request to specified hostname and port
  * @param {string} hostname Hostname / address of machine
  * @param {number} port TCP port to test
@@ -104,6 +111,7 @@ class TCPMonitorType extends MonitorType {
      * @inheritdoc
      */
     async check(monitor, heartbeat, _server) {
+<<<<<<< HEAD
         const expectedTlsAlert = monitor.expected_tls_alert;
 
         // If expecting a TLS alert, use TLS connection with alert detection
@@ -123,6 +131,8 @@ class TCPMonitorType extends MonitorType {
      * @returns {Promise<void>}
      */
     async checkTcp(monitor, heartbeat) {
+=======
+>>>>>>> upstream/master
         try {
             const resp = await tcping(monitor.hostname, monitor.port);
             heartbeat.ping = resp;
@@ -131,6 +141,7 @@ class TCPMonitorType extends MonitorType {
         } catch {
             throw new Error("Connection failed");
         }
+<<<<<<< HEAD
 
         let socket_;
 
@@ -405,12 +416,17 @@ class TCPMonitorType extends MonitorType {
                 reject(new Error("TLS connection timed out"));
             });
         });
+=======
+>>>>>>> upstream/master
     }
 }
 
 module.exports = {
     TCPMonitorType,
+<<<<<<< HEAD
     TLS_ALERT_CODES,
     parseTlsAlertNumber,
     getTlsAlertName,
+=======
+>>>>>>> upstream/master
 };
