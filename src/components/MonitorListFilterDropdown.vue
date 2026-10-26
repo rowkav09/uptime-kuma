@@ -1,6 +1,16 @@
 <template>
     <div tabindex="-1" class="dropdown" @focusin="openMenu" @focusout="handleFocusOut">
+<<<<<<< HEAD
         <button type="button" class="filter-dropdown-status" :class="{ active: filterActive }" tabindex="0">
+=======
+        <button
+            type="button"
+            class="filter-dropdown-status"
+            :class="{ active: filterActive }"
+            tabindex="0"
+            :data-testid="testId"
+        >
+>>>>>>> upstream/master
             <div class="px-1 d-flex align-items-center">
                 <slot name="status"></slot>
             </div>
@@ -22,6 +32,13 @@ export default {
             type: Boolean,
             required: true,
         },
+<<<<<<< HEAD
+=======
+        testId: {
+            type: String,
+            default: undefined,
+        },
+>>>>>>> upstream/master
     },
     emits: ["openMenu"],
     data() {

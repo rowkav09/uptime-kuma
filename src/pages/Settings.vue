@@ -168,6 +168,13 @@ export default {
                     this.settings.nscd = true;
                 }
 
+<<<<<<< HEAD
+=======
+                if (this.settings.prometheusApiEnabled === undefined) {
+                    this.settings.prometheusApiEnabled = false;
+                }
+
+>>>>>>> upstream/master
                 if (this.settings.keepDataPeriodDays === undefined) {
                     this.settings.keepDataPeriodDays = 180;
                 }

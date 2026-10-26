@@ -5,7 +5,11 @@ const { log } = require("../src/util");
 const { loginRateLimiter, apiRateLimiter } = require("./rate-limiter");
 const { Settings } = require("./settings");
 const dayjs = require("dayjs");
+<<<<<<< HEAD
 const { checkPassword } = require("./better-auth");
+=======
+const { checkPassword, verifyApiKey: verifyBetterAuthAPIKey } = require("./better-auth");
+>>>>>>> upstream/master
 
 /**
  * @deprecated DO NOT CALL IT. Use Better Auth instead.
@@ -38,17 +42,46 @@ exports.login = async function (username, password) {
 /**
  * Validate a provided API key
  * @param {string} key API key to verify
+<<<<<<< HEAD
  * @returns {boolean} API is ok?
+=======
+ * @returns {Promise<boolean>} API is ok?
+>>>>>>> upstream/master
  */
 async function verifyAPIKey(key) {
     if (typeof key !== "string") {
         return false;
     }
 
+<<<<<<< HEAD
+=======
+    // Better Auth API keys
+    if (await verifyBetterAuthAPIKey(key)) {
+        return true;
+    }
+
+    // Legacy API keys, kept in the old `api_key` table
+    return await verifyLegacyAPIKey(key);
+}
+
+/**
+ * Verify a legacy API key (uk<id>_<clear>, bcrypt hash in the old `api_key` table)
+ * @param {string} key API key to verify
+ * @returns {Promise<boolean>} API is ok?
+ */
+async function verifyLegacyAPIKey(key) {
+>>>>>>> upstream/master
     // uk prefix + key ID is before _
     let index = key.substring(2, key.indexOf("_"));
     let clear = key.substring(key.indexOf("_") + 1, key.length);
 
+<<<<<<< HEAD
+=======
+    if (!index || !clear) {
+        return false;
+    }
+
+>>>>>>> upstream/master
     let hash = await R.findOne("api_key", " id=? ", [index]);
 
     if (hash === null) {
@@ -61,7 +94,11 @@ async function verifyAPIKey(key) {
         return false;
     }
 
+<<<<<<< HEAD
     return hash && passwordHash.verify(clear, hash.key);
+=======
+    return passwordHash.verify(clear, hash.key);
+>>>>>>> upstream/master
 }
 
 /**
@@ -181,3 +218,9 @@ exports.apiAuth = async function (req, res, next) {
         next();
     }
 };
+<<<<<<< HEAD
+=======
+
+// Exported for tests
+exports.verifyAPIKey = verifyAPIKey;
+>>>>>>> upstream/master

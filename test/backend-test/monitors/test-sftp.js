@@ -317,7 +317,13 @@ describe("SFTP Monitor", () => {
 describe(
     "SFTP Monitor (real OpenSSH server)",
     {
+<<<<<<< HEAD
         skip: !!process.env.CI && (process.platform !== "linux" || process.arch !== "x64"),
+=======
+        skip:
+            (!!process.env.CI && (process.platform !== "linux" || process.arch !== "x64")) ||
+            process.env.SKIP_TESTCONTAINER,
+>>>>>>> upstream/master
     },
     () => {
         let monitor;
