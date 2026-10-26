@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { expect, test } from "@playwright/test";
+=======
+import { expect, test } from "../fixtures";
+>>>>>>> upstream/master
 import { login, restoreSqliteSnapshot, screenshot } from "../util-test";
 
 test.describe("Friendly Name Tests", () => {

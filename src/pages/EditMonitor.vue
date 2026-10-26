@@ -812,6 +812,7 @@
                                 </div>
                             </div>
 
+<<<<<<< HEAD
                             <div v-if="monitor.type === 'port'" class="my-3">
                                 <label for="port_security" class="form-label">{{ $t("SSL/TLS") }}</label>
                                 <select id="port_security" v-model="monitor.smtpSecurity" class="form-select">
@@ -821,6 +822,8 @@
                                 </select>
                             </div>
 
+=======
+>>>>>>> upstream/master
                             <!-- SFTP Monitor Fields -->
                             <template v-if="monitor.type === 'sftp'">
                                 <div class="my-3">
@@ -901,6 +904,7 @@
                                 </div>
                             </template>
 
+<<<<<<< HEAD
                             <!-- Expected TLS Alert (for TCP monitor mTLS verification) -->
                             <template v-if="monitor.type === 'port'">
                                 <div class="my-3">
@@ -942,6 +946,8 @@
                                 </div>
                             </template>
 
+=======
+>>>>>>> upstream/master
                             <!-- NTP Configuration -->
                             <template v-if="monitor.type === 'ntp'">
                                 <h4 class="mt-4">{{ $t("ntpThresholdsTitle") }}</h4>
@@ -1770,8 +1776,11 @@
                                     monitor.type === 'http' ||
                                     monitor.type === 'keyword' ||
                                     monitor.type === 'json-query' ||
+<<<<<<< HEAD
                                     (monitor.type === 'port' &&
                                         ['starttls', 'secure'].includes(monitor.smtpSecurity)) ||
+=======
+>>>>>>> upstream/master
                                     (monitor.type === 'globalping' && monitor.subtype === 'http')
                                 "
                                 class="my-3 form-check"
