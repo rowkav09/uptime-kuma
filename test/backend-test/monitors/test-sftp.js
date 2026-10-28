@@ -46,7 +46,11 @@ const EXISTING_PATH = "/existing/path";
 // ---------------------------------------------------------------------------
 
 /** Pinned so the suite cannot break when a new image is published upstream. */
+<<<<<<< HEAD
 const SSH_IMAGE = "lscr.io/linuxserver/openssh-server:10.3_p1-r0-ls233";
+=======
+const SSH_IMAGE = "ghcr.io/linuxserver/openssh-server:10.3_p1-r0-ls233";
+>>>>>>> upstream/master
 /** Port sshd listens on inside the linuxserver image (not 22). */
 const SSH_CONTAINER_PORT = 2222;
 /** Home directory of the ssh user in the image; used for the path-exists check. */
@@ -317,7 +321,13 @@ describe("SFTP Monitor", () => {
 describe(
     "SFTP Monitor (real OpenSSH server)",
     {
+<<<<<<< HEAD
         skip: !!process.env.CI && (process.platform !== "linux" || process.arch !== "x64"),
+=======
+        skip:
+            (!!process.env.CI && (process.platform !== "linux" || process.arch !== "x64")) ||
+            process.env.SKIP_TESTCONTAINER,
+>>>>>>> upstream/master
     },
     () => {
         let monitor;

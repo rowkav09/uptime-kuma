@@ -1,5 +1,9 @@
 /.idea
 /node_modules
+<<<<<<< HEAD
+=======
+**/node_modules
+>>>>>>> upstream/master
 /data*
 /out
 /test
@@ -34,6 +38,25 @@ tsconfig.json
 /extra/exe-builder
 /extra/uptime-kuma-push
 
+<<<<<<< HEAD
+=======
+# Dev-only
+/AGENTS.md
+/CLAUDE.md
+/PLAN.md
+/.ws-context
+/compose.yaml
+/index.html
+/vite.config.mjs
+/playwright.config.js
+/.prettierrc.js
+/.prettierignore
+
+# Only src/util.ts is used by the server at runtime
+/src/*
+!/src/util.ts
+
+>>>>>>> upstream/master
 # Comment the following line if you want to rebuild the healthcheck binary
 /extra/healthcheck-armv7
 

@@ -34,6 +34,13 @@
                             <i18n-t tag="div" keypath="Example:" class="form-text mt-3">
                                 <code>ws://chrome.browserless.io/playwright?token=YOUR-API-TOKEN</code>
                             </i18n-t>
+<<<<<<< HEAD
+=======
+
+                            <div class="text-danger mt-3" role="alert">
+                                {{ $t("browserlessSupportedVersion", { version: browserlessVersion }) }}
+                            </div>
+>>>>>>> upstream/master
                         </div>
                     </div>
 
@@ -86,6 +93,11 @@ export default {
             modal: null,
             processing: false,
             id: null,
+<<<<<<< HEAD
+=======
+            // Browserless releases that still list playwright-core 1.64.1 as supported
+            browserlessVersion: "2.57.3",
+>>>>>>> upstream/master
             remoteBrowser: {
                 name: "",
                 url: "",

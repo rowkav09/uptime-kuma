@@ -187,6 +187,32 @@
                 </div>
             </div>
 
+<<<<<<< HEAD
+=======
+            <!-- Prometheus API -->
+            <div class="mb-4">
+                <label class="form-label">
+                    {{ $t("Prometheus API") }}
+                </label>
+
+                <div class="form-check form-switch">
+                    <input
+                        id="prometheusApiEnabled"
+                        v-model="settings.prometheusApiEnabled"
+                        class="form-check-input"
+                        type="checkbox"
+                    />
+                    <label class="form-check-label" for="prometheusApiEnabled">
+                        {{ $t("Enable") }}
+                    </label>
+                </div>
+
+                <div class="form-text">
+                    {{ $t("prometheusApiDescription") }}
+                </div>
+            </div>
+
+>>>>>>> upstream/master
             <!-- Chrome Executable -->
             <div class="mb-4">
                 <label class="form-label" for="primaryBaseURL">
