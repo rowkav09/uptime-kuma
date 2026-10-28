@@ -3,6 +3,7 @@ const assert = require("node:assert");
 const { TCPMonitorType } = require("../../../server/monitor-types/tcp");
 const { UP, PENDING } = require("../../../src/util");
 const net = require("net");
+<<<<<<< HEAD
 const tls = require("node:tls");
 const { retryExternalService } = require("../test-util");
 
@@ -28,6 +29,8 @@ tpS2kbUpNgRYIL2YX1/Vwi1ZjV6hRANCAASqopjGRvobCZ0LTWtHKPL/hUkNIBC9
 sO/zmHS+KbzZnbv6rYWzrEq4kmykegJ1XlpjrhAvnaKrUC+EhLPKVIKh
 -----END PRIVATE KEY-----
 `;
+=======
+>>>>>>> upstream/master
 
 describe("TCP Monitor", () => {
     /**
@@ -92,6 +95,7 @@ describe("TCP Monitor", () => {
         await assert.rejects(tcpMonitor.check(monitor, heartbeat, {}), new Error("Connection failed"));
     });
 
+<<<<<<< HEAD
     test("check() rejects when TLS certificate is expired or invalid", async () => {
         const tcpMonitor = new TCPMonitorType();
 
@@ -304,4 +308,37 @@ describe("TCP Monitor", () => {
         assert.strictEqual(getTlsAlertName(40), "handshake_failure");
         assert.strictEqual(getTlsAlertName(999), "unknown_alert_999");
     });
+=======
+    test("check() treats a legacy TLS port monitor as a plain TCP check", async () => {
+        const port = 12346;
+        const server = await createTCPServer(port);
+
+        try {
+            const tcpMonitor = new TCPMonitorType();
+
+            // Monitors saved before TLS support was removed still carry these fields.
+            const monitor = {
+                hostname: "localhost",
+                port: port,
+                smtpSecurity: "starttls",
+                expected_tls_alert: "certificate_required",
+                isEnabledExpiryNotification: () => true,
+                handleTlsInfo: () => {
+                    throw new Error("Certificate checking must not run for TCP monitors");
+                },
+            };
+
+            const heartbeat = {
+                msg: "",
+                status: PENDING,
+            };
+
+            await tcpMonitor.check(monitor, heartbeat, {});
+
+            assert.strictEqual(heartbeat.status, UP);
+        } finally {
+            server.close();
+        }
+    });
+>>>>>>> upstream/master
 });

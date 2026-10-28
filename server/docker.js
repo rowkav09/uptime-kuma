@@ -87,7 +87,11 @@ class DockerHost {
             let res = await axios.request(options);
 
             if (Array.isArray(res.data)) {
+<<<<<<< HEAD
                 if (res.data.length > 1) {
+=======
+                if (res.data.length > 0) {
+>>>>>>> upstream/master
                     if ("ImageID" in res.data[0]) {
                         return res.data.length;
                     } else {

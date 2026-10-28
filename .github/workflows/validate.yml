@@ -6,6 +6,10 @@ on:
   pull_request:
     branches:
       - master
+<<<<<<< HEAD
+=======
+      - 2.5.X
+>>>>>>> upstream/master
       - 1.23.X
       - 3.0.X
   workflow_dispatch:

@@ -1,5 +1,6 @@
 import { checkLogin as betterAuthCheckLogin } from "./better-auth";
 
+<<<<<<< HEAD
 const ping = require("@louislam/ping");
 const { R } = require("redbean-node");
 const {
@@ -10,6 +11,10 @@ const {
     PING_COUNT_DEFAULT,
     PING_PER_REQUEST_TIMEOUT_DEFAULT,
 } = require("../src/util");
+=======
+const { R } = require("redbean-node");
+const { log, badgeConstants } = require("../src/util");
+>>>>>>> upstream/master
 const iconv = require("iconv-lite");
 const chardet = require("chardet");
 const chroma = require("chroma-js");
@@ -34,8 +39,11 @@ dayjs.extend(require("dayjs/plugin/utc"));
 const { Kafka, SASLOptions } = require("kafkajs");
 const crypto = require("crypto");
 
+<<<<<<< HEAD
 const isWindows = process.platform === /^win/.test(process.platform);
 
+=======
+>>>>>>> upstream/master
 /**
  * Gets an Access Token from an oidc/oauth2 provider
  * @param {string} tokenEndpoint The token URI from the auth service provider
@@ -77,6 +85,7 @@ exports.getOidcTokenClientCredentials = async (
 };
 
 /**
+<<<<<<< HEAD
  * Ping the specified machine
  * @param {string} destAddr Hostname / IP address of machine to ping
  * @param {number} count Number of packets to send before stopping
@@ -173,6 +182,8 @@ exports.pingAsync = function (
 };
 
 /**
+=======
+>>>>>>> upstream/master
  * Monitor Kafka using Producer
  * @param {string[]} brokers List of kafka brokers to connect, host and
  * port joined by ':'

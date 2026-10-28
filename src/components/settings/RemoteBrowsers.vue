@@ -23,7 +23,11 @@
             <h5 class="my-4 settings-subheading">{{ $t("What is a Remote Browser?") }}</h5>
             <p>
                 {{ $t("remoteBrowsersDescription") }}
+<<<<<<< HEAD
                 <a href="https://hub.docker.com/r/browserless/chrome">{{ $t("self-hosted container") }}</a>
+=======
+                <a href="https://docs.browserless.io/enterprise/open-source">{{ $t("self-hosted container") }}</a>
+>>>>>>> upstream/master
             </p>
         </div>
 

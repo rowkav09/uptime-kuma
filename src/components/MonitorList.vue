@@ -11,6 +11,10 @@
                         <input
                             v-model="searchText"
                             class="form-control search-input"
+<<<<<<< HEAD
+=======
+                            data-testid="monitor-search"
+>>>>>>> upstream/master
                             :placeholder="$t('Search...')"
                             :aria-label="$t('Search monitored sites')"
                             autocomplete="off"
@@ -23,6 +27,10 @@
                         v-if="!selectMode"
                         v-model="selectMode"
                         class="form-check-input"
+<<<<<<< HEAD
+=======
+                        data-testid="select-mode-toggle"
+>>>>>>> upstream/master
                         type="checkbox"
                         :aria-label="$t('selectAllMonitorsAria')"
                         @change="selectAll = selectMode"
@@ -31,6 +39,10 @@
                         v-else
                         v-model="selectAll"
                         class="form-check-input"
+<<<<<<< HEAD
+=======
+                        data-testid="select-all-toggle"
+>>>>>>> upstream/master
                         type="checkbox"
                         :aria-label="selectAll ? $t('deselectAllMonitorsAria') : $t('selectAllMonitorsAria')"
                     />
@@ -55,6 +67,10 @@
                         <button
                             class="btn btn-outline-normal dropdown-toggle"
                             type="button"
+<<<<<<< HEAD
+=======
+                            data-testid="bulk-actions"
+>>>>>>> upstream/master
                             data-bs-toggle="dropdown"
                             :aria-label="$t('Actions')"
                             :disabled="bulkActionInProgress"
@@ -64,13 +80,26 @@
                         </button>
                         <ul class="dropdown-menu">
                             <li>
+<<<<<<< HEAD
                                 <a class="dropdown-item" href="#" @click.prevent="pauseDialog">
+=======
+                                <a class="dropdown-item" href="#" data-testid="bulk-pause" @click.prevent="pauseDialog">
+>>>>>>> upstream/master
                                     <font-awesome-icon icon="pause" class="me-2" />
                                     {{ $t("Pause") }}
                                 </a>
                             </li>
                             <li>
+<<<<<<< HEAD
                                 <a class="dropdown-item" href="#" @click.prevent="resumeSelected">
+=======
+                                <a
+                                    class="dropdown-item"
+                                    href="#"
+                                    data-testid="bulk-resume"
+                                    @click.prevent="resumeSelected"
+                                >
+>>>>>>> upstream/master
                                     <font-awesome-icon icon="play" class="me-2" />
                                     {{ $t("Resume") }}
                                 </a>
@@ -78,6 +107,10 @@
                             <li>
                                 <a
                                     class="dropdown-item text-danger"
+<<<<<<< HEAD
+=======
+                                    data-testid="bulk-delete"
+>>>>>>> upstream/master
                                     href="#"
                                     @click.prevent="$refs.confirmDelete.show()"
                                 >
@@ -99,16 +132,35 @@
             :class="{ scrollbar: scrollbar }"
             :style="monitorListStyle"
             data-testid="monitor-list"
+<<<<<<< HEAD
         >
             <div v-if="Object.keys($root.monitorList).length === 0" class="text-center mt-3">
+=======
+            @scroll.passive="onListScroll"
+        >
+            <div v-if="!$root.monitorListLoaded" class="list-loading" aria-busy="true">
+                <div v-for="i in 8" :key="i" class="skeleton-row"></div>
+            </div>
+            <div v-else-if="Object.keys($root.monitorList).length === 0" class="text-center mt-3">
+>>>>>>> upstream/master
                 {{ $t("No Monitors, please") }}
                 <router-link to="/add">{{ $t("add one") }}</router-link>
             </div>
 
+<<<<<<< HEAD
             <MonitorListItem
                 v-for="item in sortedMonitorList"
                 :key="`${item.id}-${collapseKey}`"
                 :monitor="item"
+=======
+            <div :style="{ height: renderedRows.top + 'px' }"></div>
+            <MonitorListItem
+                v-for="item in renderedRows.items"
+                :key="`${item.id}-${collapseKey}`"
+                :ref="(el) => setRowRef(el, item.id)"
+                :monitor="item"
+                :children-by-parent="childrenByParent"
+>>>>>>> upstream/master
                 :isSelectMode="selectMode"
                 :isSelected="isSelected"
                 :select="select"
@@ -116,6 +168,10 @@
                 :filter-func="filterFunc"
                 :sort-func="sortFunc"
             />
+<<<<<<< HEAD
+=======
+            <div :style="{ height: renderedRows.bottom + 'px' }"></div>
+>>>>>>> upstream/master
         </div>
     </div>
 
@@ -133,6 +189,10 @@ import Confirm from "../components/Confirm.vue";
 import MonitorListItem from "../components/MonitorListItem.vue";
 import MonitorListFilter from "./MonitorListFilter.vue";
 import { getMonitorRelativeURL } from "../util.ts";
+<<<<<<< HEAD
+=======
+import { computeListWindow, computeRowMetrics } from "../monitor-list-window";
+>>>>>>> upstream/master
 
 export default {
     components: {
@@ -161,10 +221,63 @@ export default {
                 tags: null,
             },
             collapseKey: 0,
+<<<<<<< HEAD
+=======
+            scrollTop: 0,
+            viewportHeight: 0,
+            rowHeights: {},
+>>>>>>> upstream/master
         };
     },
     computed: {
         /**
+<<<<<<< HEAD
+=======
+         * Groups all monitors by parent id in a single pass so rows never scan the full list.
+         * @returns {Map<number|null, Array>} Parent id -> direct children
+         */
+        childrenByParent() {
+            const map = new Map();
+            for (const monitor of Object.values(this.$root.monitorList)) {
+                const key = monitor.parent ?? null;
+                let children = map.get(key);
+                if (!children) {
+                    children = [];
+                    map.set(key, children);
+                }
+                children.push(monitor);
+            }
+            return map;
+        },
+
+        /**
+         * Row offsets and heights for the windowed list.
+         * @returns {{heights: number[], offsets: number[], total: number}} Layout data
+         */
+        rowMetrics() {
+            const ids = this.sortedMonitorList.map((monitor) => monitor.id);
+            return computeRowMetrics(ids, this.rowHeights);
+        },
+
+        /**
+         * Only the rows inside (and slightly around) the viewport, plus spacer sizes.
+         * This keeps the DOM at ~50 rows no matter how many monitors exist.
+         * @returns {{items: Array, top: number, bottom: number}} Visible slice and spacers
+         */
+        renderedRows() {
+            const list = this.sortedMonitorList;
+            const { heights, offsets, total } = this.rowMetrics;
+            const window = computeListWindow(offsets, heights, total, this.scrollTop, this.viewportHeight);
+
+            return {
+                items: list.slice(window.start, window.end),
+                top: window.top,
+                bottom: window.bottom,
+            };
+        },
+
+        /**
+>>>>>>> upstream/master
          * Improve the sticky appearance of the list by increasing its
          * height as user scrolls down.
          * Not used on mobile.
@@ -187,6 +300,7 @@ export default {
          * @returns {Array} The sorted list of monitors.
          */
         sortedMonitorList() {
+<<<<<<< HEAD
             let result = Object.values(this.$root.monitorList);
 
             result = result.filter((monitor) => {
@@ -196,6 +310,9 @@ export default {
                 }
                 return true;
             });
+=======
+            let result = this.childrenByParent.get(null) ?? [];
+>>>>>>> upstream/master
 
             result = result.filter(this.filterFunc);
 
@@ -245,8 +362,14 @@ export default {
          * @returns {Array} Array of group monitors with children
          */
         groupMonitors() {
+<<<<<<< HEAD
             const monitors = Object.values(this.$root.monitorList);
             return monitors.filter((m) => m.type === "group" && monitors.some((child) => child.parent === m.id));
+=======
+            return (this.childrenByParent.get(null) ?? []).filter(
+                (m) => m.type === "group" && (this.childrenByParent.get(m.id)?.length ?? 0) > 0
+            );
+>>>>>>> upstream/master
         },
 
         /**
@@ -305,6 +428,7 @@ export default {
             }
         },
     },
+<<<<<<< HEAD
     mounted() {
         window.addEventListener("scroll", this.onScroll);
     },
@@ -313,6 +437,71 @@ export default {
     },
     methods: {
         /**
+=======
+    created() {
+        this.rowRefs = new Map();
+    },
+    mounted() {
+        window.addEventListener("scroll", this.onScroll);
+        window.addEventListener("resize", this.onListScroll);
+        this.onListScroll();
+    },
+    updated() {
+        this.measureRows();
+    },
+    beforeUnmount() {
+        window.removeEventListener("scroll", this.onScroll);
+        window.removeEventListener("resize", this.onListScroll);
+    },
+    methods: {
+        /**
+         * Keep the reference to each mounted row so its real height can be measured
+         * @param {object} el Row component instance
+         * @param {number} id Monitor id
+         * @returns {void}
+         */
+        setRowRef(el, id) {
+            if (el) {
+                this.rowRefs.set(id, el);
+            } else {
+                this.rowRefs.delete(id);
+            }
+        },
+        /**
+         * Read the real height of mounted rows (tags and the bottom bar change it)
+         * @returns {void}
+         */
+        measureRows() {
+            let changed = false;
+            for (const [id, row] of this.rowRefs) {
+                const el = row?.$el;
+                if (!el) {
+                    continue;
+                }
+                const height = el.offsetHeight;
+                if (height > 0 && Math.abs((this.rowHeights[id] ?? 0) - height) > 1) {
+                    this.rowHeights[id] = height;
+                    changed = true;
+                }
+            }
+            if (changed) {
+                this.$nextTick(this.onListScroll);
+            }
+        },
+        /**
+         * Track the list container's scroll position for windowing
+         * @returns {void}
+         */
+        onListScroll() {
+            const el = this.$refs.monitorList;
+            if (!el) {
+                return;
+            }
+            this.scrollTop = el.scrollTop;
+            this.viewportHeight = el.clientHeight;
+        },
+        /**
+>>>>>>> upstream/master
          * Handle user scroll
          * @returns {void}
          */
@@ -528,8 +717,13 @@ export default {
         filterFunc(monitor) {
             // Group monitors bypass filter if at least 1 of children matched
             if (monitor.type === "group") {
+<<<<<<< HEAD
                 const children = Object.values(this.$root.monitorList).filter((m) => m.parent === monitor.id);
                 if (children.some((child, index, children) => this.filterFunc(child))) {
+=======
+                const children = this.childrenByParent.get(monitor.id) ?? [];
+                if (children.some((child) => this.filterFunc(child))) {
+>>>>>>> upstream/master
                     return true;
                 }
             }
@@ -551,8 +745,15 @@ export default {
             // filter by status
             let statusMatch = true;
             if (this.filterState.status != null && this.filterState.status.length > 0) {
+<<<<<<< HEAD
                 if (monitor.id in this.$root.lastHeartbeatList && this.$root.lastHeartbeatList[monitor.id]) {
                     monitor.status = this.$root.lastHeartbeatList[monitor.id].status;
+=======
+                if (!monitor.active) {
+                    monitor.status = null;
+                } else {
+                    monitor.status = this.$root.lastHeartbeatList[monitor.id]?.status;
+>>>>>>> upstream/master
                 }
                 statusMatch = this.filterState.status.includes(monitor.status);
             }
@@ -581,6 +782,15 @@ export default {
          * @returns {number} -1, 0 or 1
          */
         sortFunc(m1, m2) {
+<<<<<<< HEAD
+=======
+            if (!m1 || !m2) {
+                return 0;
+            }
+            // A monitor may be added before its name arrives (e.g. optimistic update)
+            const name1 = typeof m1.name === "string" ? m1.name : "";
+            const name2 = typeof m2.name === "string" ? m2.name : "";
+>>>>>>> upstream/master
             if (m1.active !== m2.active) {
                 if (m1.active === false) {
                     return 1;
@@ -601,7 +811,11 @@ export default {
                 }
             }
 
+<<<<<<< HEAD
             return m1.name.localeCompare(m2.name);
+=======
+            return name1.localeCompare(name2);
+>>>>>>> upstream/master
         },
     },
 };
@@ -817,6 +1031,32 @@ export default {
     transition: none !important;
 }
 
+<<<<<<< HEAD
+=======
+.list-loading {
+    padding: 10px 4px;
+}
+
+.skeleton-row {
+    height: 48px;
+    margin-bottom: 8px;
+    border-radius: 8px;
+    background: linear-gradient(90deg, rgba(128, 128, 128, 0.08), rgba(128, 128, 128, 0.18), rgba(128, 128, 128, 0.08));
+    background-size: 200% 100%;
+    animation: skeleton-shimmer 1.2s ease-in-out infinite;
+}
+
+@keyframes skeleton-shimmer {
+    0% {
+        background-position: 200% 0;
+    }
+
+    100% {
+        background-position: -200% 0;
+    }
+}
+
+>>>>>>> upstream/master
 .tags {
     margin-top: 4px;
     padding-left: 67px;
