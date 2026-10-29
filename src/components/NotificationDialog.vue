@@ -291,6 +291,10 @@ export default {
             // Email - Email services
             let email = {
                 Brevo: "Brevo",
+<<<<<<< HEAD
+=======
+                MicrosoftGraph: this.$t("Microsoft Graph Email"),
+>>>>>>> upstream/master
                 Resend: "Resend",
                 SendGrid: "SendGrid",
                 smtp: this.$t("smtp"),

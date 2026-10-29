@@ -16,6 +16,20 @@ function createMonitorType(execFileStub) {
     return new PM2MonitorType();
 }
 
+<<<<<<< HEAD
+=======
+/**
+ * Create a mock monitor exposing the PM2 process name through its config
+ * @param {string} processName The PM2 process name
+ * @returns {object} Mock monitor object
+ */
+function createMockMonitor(processName) {
+    return {
+        getConfigValue: (key, defaultValue) => (key === "systemServiceName" ? processName : defaultValue),
+    };
+}
+
+>>>>>>> upstream/master
 describe("PM2MonitorType", () => {
     let monitorType;
     let heartbeat;
@@ -51,12 +65,16 @@ describe("PM2MonitorType", () => {
             );
         });
 
+<<<<<<< HEAD
         await monitorType.check(
             {
                 system_service_name: "api",
             },
             heartbeat
         );
+=======
+        await monitorType.check(createMockMonitor("api"), heartbeat);
+>>>>>>> upstream/master
 
         assert.strictEqual(heartbeat.status, UP);
         assert.ok(heartbeat.msg.includes("online"));
@@ -80,12 +98,16 @@ describe("PM2MonitorType", () => {
             );
         });
 
+<<<<<<< HEAD
         await monitorType.check(
             {
                 system_service_name: "api",
             },
             heartbeat
         );
+=======
+        await monitorType.check(createMockMonitor("api"), heartbeat);
+>>>>>>> upstream/master
 
         assert.strictEqual(heartbeat.status, UP);
         assert.ok(heartbeat.msg.includes("online"));
@@ -108,6 +130,7 @@ describe("PM2MonitorType", () => {
             );
         });
 
+<<<<<<< HEAD
         await assert.rejects(
             monitorType.check(
                 {
@@ -117,6 +140,9 @@ describe("PM2MonitorType", () => {
             ),
             /stopped/
         );
+=======
+        await assert.rejects(monitorType.check(createMockMonitor("api"), heartbeat), /stopped/);
+>>>>>>> upstream/master
 
         assert.strictEqual(heartbeat.status, DOWN);
     });

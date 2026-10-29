@@ -3,12 +3,18 @@
  */
 const { TimeLogger } = require("../src/util");
 const { R } = require("redbean-node");
+<<<<<<< HEAD
 const { UptimeKumaServer } = require("./uptime-kuma-server");
 const server = UptimeKumaServer.getInstance();
 const io = server.io;
 const { setting } = require("./util-server");
 const checkVersion = require("./check-version");
 const Database = require("./database");
+=======
+const { UptimeKumaServer, getInfo } = require("./uptime-kuma-server");
+const server = UptimeKumaServer.getInstance();
+const io = server.io;
+>>>>>>> upstream/master
 
 /**
  * Send list of notification providers to client
@@ -64,6 +70,64 @@ async function sendHeartbeatList(socket, monitorID, toUser = false, overwrite = 
 }
 
 /**
+<<<<<<< HEAD
+=======
+ * Send the latest heartbeat of many monitors in one event.
+ * The full 100-beat history is fetched lazily per visible row, so the login
+ * payload does not grow with the number of monitors.
+ * @param {Socket} socket Socket.io instance
+ * @param {Array<number|string>} monitorIDs Monitor ids
+ * @returns {Promise<void>}
+ */
+async function sendHeartbeatLists(socket, monitorIDs) {
+    const result = {};
+    const chunkSize = 500;
+
+    for (let i = 0; i < monitorIDs.length; i += chunkSize) {
+        const chunk = monitorIDs.slice(i, i + chunkSize);
+        const placeholders = chunk.map(() => "?").join(",");
+        const rows = await R.getAll(
+            `
+            SELECT h.id, h.monitor_id, h.status, h.msg, h.time, h.ping, h.important, h.duration, h.down_count, h.retries
+            FROM heartbeat h
+            JOIN (
+                SELECT monitor_id, MAX(id) AS max_id
+                FROM heartbeat
+                WHERE monitor_id IN (${placeholders})
+                GROUP BY monitor_id
+            ) latest ON h.id = latest.max_id
+        `,
+            chunk
+        );
+        for (const row of rows) {
+            result[row.monitor_id] = [row];
+        }
+    }
+
+    socket.emit("heartbeatLists", result);
+}
+
+/**
+ * Recent heartbeat history for one monitor, requested by a visible row
+ * @param {number} monitorID Monitor id
+ * @returns {Promise<Array<object>>} Oldest-to-newest heartbeats
+ */
+async function getHeartbeatHistory(monitorID) {
+    const list = await R.getAll(
+        `
+        SELECT id, monitor_id, status, msg, time, ping, important, duration, down_count, retries
+        FROM heartbeat
+        WHERE monitor_id = ?
+        ORDER BY time DESC
+        LIMIT 100
+    `,
+        [monitorID]
+    );
+    return list.reverse();
+}
+
+/**
+>>>>>>> upstream/master
  * Important Heart beat list (aka event list)
  * @param {Socket} socket Socket.io instance
  * @param {number} monitorID ID of monitor to send heartbeat history
@@ -116,6 +180,7 @@ async function sendProxyList(socket) {
 }
 
 /**
+<<<<<<< HEAD
  * Emit API key list to client
  * @param {Socket} socket Socket.io socket instance
  * @returns {Promise<void>}
@@ -137,12 +202,15 @@ async function sendAPIKeyList(socket) {
 }
 
 /**
+=======
+>>>>>>> upstream/master
  * Emits the version information to the client.
  * @param {Socket} socket Socket.io socket instance
  * @param {boolean} hideVersion Should we hide the version information in the response?
  * @returns {Promise<void>}
  */
 async function sendInfo(socket, hideVersion = false) {
+<<<<<<< HEAD
     const info = {
         primaryBaseURL: await setting("primaryBaseURL"),
         serverTimezone: await server.getTimezone(),
@@ -160,6 +228,9 @@ async function sendInfo(socket, hideVersion = false) {
     }
 
     socket.emit("info", info);
+=======
+    socket.emit("info", await getInfo(hideVersion));
+>>>>>>> upstream/master
 }
 
 /**
@@ -239,8 +310,16 @@ module.exports = {
     sendNotificationList,
     sendImportantHeartbeatList,
     sendHeartbeatList,
+<<<<<<< HEAD
     sendProxyList,
     sendAPIKeyList,
+=======
+    sendHeartbeatLists,
+    getHeartbeatHistory,
+    sendProxyList,
+
+    getInfo,
+>>>>>>> upstream/master
     sendInfo,
     sendDockerHostList,
     sendRemoteBrowserList,

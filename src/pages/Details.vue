@@ -498,12 +498,23 @@ export default {
                 code: "",
             },
             deleteChildrenMonitors: false,
+<<<<<<< HEAD
+=======
+            // Full monitor loaded on demand: the dashboard list only carries its summary fields
+            fetchedMonitor: null,
+>>>>>>> upstream/master
         };
     },
     computed: {
         monitor() {
+<<<<<<< HEAD
             let id = this.$route.params.id;
             return this.$root.monitorList[id];
+=======
+            // The dashboard list only carries the fields the list needs, so this page
+            // renders nothing until the full monitor has been fetched
+            return this.fetchedMonitor;
+>>>>>>> upstream/master
         },
 
         /**
@@ -584,7 +595,11 @@ export default {
         },
 
         group() {
+<<<<<<< HEAD
             return this.monitor.path.slice(0, -1).join(" / ");
+=======
+            return (this.monitor.path || []).slice(0, -1).join(" / ");
+>>>>>>> upstream/master
         },
 
         pushURL() {
@@ -609,6 +624,13 @@ export default {
             this.getImportantHeartbeatListPaged();
         },
 
+<<<<<<< HEAD
+=======
+        "$route.params.id"(id) {
+            this.fetchMonitor(id);
+        },
+
+>>>>>>> upstream/master
         monitor(to) {
             this.getImportantHeartbeatListLength();
         },
@@ -624,6 +646,10 @@ export default {
 
     mounted() {
         this.getImportantHeartbeatListLength();
+<<<<<<< HEAD
+=======
+        this.fetchMonitor(this.$route.params.id);
+>>>>>>> upstream/master
 
         this.$root.emitter.on("newImportantHeartbeat", this.onNewImportantHeartbeat);
 
@@ -642,6 +668,28 @@ export default {
     methods: {
         getResBaseURL,
         /**
+<<<<<<< HEAD
+=======
+         * Load the full monitor for this page. The dashboard list is a summary only.
+         * @param {string} id Monitor id
+         * @returns {void}
+         */
+        fetchMonitor(id) {
+            this.fetchedMonitor = null;
+            const socket = this.$root.getSocket();
+            if (!socket) {
+                // Deep links mount this page before the root initializes the socket
+                setTimeout(() => this.fetchMonitor(id), 250);
+                return;
+            }
+            socket.emit("getMonitor", id, (res) => {
+                if (res.ok && this.$route.params.id === id) {
+                    this.fetchedMonitor = res.monitor;
+                }
+            });
+        },
+        /**
+>>>>>>> upstream/master
          * Request a test notification be sent for this monitor
          * @returns {void}
          */
@@ -664,6 +712,12 @@ export default {
          */
         resumeMonitor() {
             this.$root.getSocket().emit("resumeMonitor", this.monitor.id, (res) => {
+<<<<<<< HEAD
+=======
+                if (res.ok) {
+                    this.setFetchedMonitorActive(true);
+                }
+>>>>>>> upstream/master
                 this.$root.toastRes(res);
             });
         },
@@ -674,11 +728,32 @@ export default {
          */
         pauseMonitor() {
             this.$root.getSocket().emit("pauseMonitor", this.monitor.id, (res) => {
+<<<<<<< HEAD
+=======
+                if (res.ok) {
+                    this.setFetchedMonitorActive(false);
+                }
+>>>>>>> upstream/master
                 this.$root.toastRes(res);
             });
         },
 
         /**
+<<<<<<< HEAD
+=======
+         * Keep the fetched (full) monitor in sync with an active-state change.
+         * The dashboard list is a summary, so this page keeps its own copy.
+         * @param {boolean} active New active state
+         * @returns {void}
+         */
+        setFetchedMonitorActive(active) {
+            if (this.fetchedMonitor) {
+                this.fetchedMonitor.active = active;
+            }
+        },
+
+        /**
+>>>>>>> upstream/master
          * Show dialog to confirm deletion
          * @returns {void}
          */

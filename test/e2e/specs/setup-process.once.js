@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 import { test } from "@playwright/test";
+=======
+import { test } from "../fixtures";
+>>>>>>> upstream/master
 import { getSqliteDatabaseExists, login, screenshot, takeSqliteSnapshot } from "../util-test";
 
 test.describe("Uptime Kuma Setup", () => {
