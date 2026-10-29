@@ -812,6 +812,7 @@
                                 </div>
                             </div>
 
+<<<<<<< HEAD
                             <div v-if="monitor.type === 'port'" class="my-3">
                                 <label for="port_security" class="form-label">{{ $t("SSL/TLS") }}</label>
                                 <select id="port_security" v-model="monitor.smtpSecurity" class="form-select">
@@ -821,6 +822,8 @@
                                 </select>
                             </div>
 
+=======
+>>>>>>> upstream/master
                             <!-- SFTP Monitor Fields -->
                             <template v-if="monitor.type === 'sftp'">
                                 <div class="my-3">
@@ -901,6 +904,7 @@
                                 </div>
                             </template>
 
+<<<<<<< HEAD
                             <!-- Expected TLS Alert (for TCP monitor mTLS verification) -->
                             <template v-if="monitor.type === 'port'">
                                 <div class="my-3">
@@ -942,6 +946,8 @@
                                 </div>
                             </template>
 
+=======
+>>>>>>> upstream/master
                             <!-- NTP Configuration -->
                             <template v-if="monitor.type === 'ntp'">
                                 <h4 class="mt-4">{{ $t("ntpThresholdsTitle") }}</h4>
@@ -1394,7 +1400,11 @@
                                     </label>
                                     <input
                                         id="system-service-name"
+<<<<<<< HEAD
                                         v-model="monitor.system_service_name"
+=======
+                                        v-model="monitor.config.systemServiceName"
+>>>>>>> upstream/master
                                         type="text"
                                         class="form-control"
                                         required
@@ -1405,29 +1415,46 @@
                                         <template v-if="$root.info.runtime.platform === 'linux'">
                                             {{
                                                 $t("systemServiceDescriptionLinux", {
+<<<<<<< HEAD
                                                     service_name: monitor.system_service_name || "nginx",
+=======
+                                                    service_name: monitor.config.systemServiceName || "nginx",
+>>>>>>> upstream/master
                                                 })
                                             }}
                                         </template>
                                         <template v-else-if="$root.info.runtime.platform === 'win32'">
                                             {{
                                                 $t("systemServiceDescriptionWindows", {
+<<<<<<< HEAD
                                                     service_name: monitor.system_service_name || "Dnscache",
+=======
+                                                    service_name: monitor.config.systemServiceName || "Dnscache",
+>>>>>>> upstream/master
                                                 })
                                             }}
                                         </template>
                                         <template v-else>
                                             {{
                                                 $t("systemServiceDescription", {
+<<<<<<< HEAD
                                                     service_name: monitor.system_service_name || "nginx",
+=======
+                                                    service_name: monitor.config.systemServiceName || "nginx",
+>>>>>>> upstream/master
                                                 })
                                             }}
                                         </template>
 
                                         <template
                                             v-if="
+<<<<<<< HEAD
                                                 !monitor.system_service_name ||
                                                 /^[a-zA-Z0-9_\-\.\@\ ]+$/.test(monitor.system_service_name)
+=======
+                                                !monitor.config.systemServiceName ||
+                                                /^[a-zA-Z0-9_\-\.\@\ ]+$/.test(monitor.config.systemServiceName)
+>>>>>>> upstream/master
                                             "
                                         >
                                             <div v-if="$root.info.runtime.platform === 'linux'" class="mt-2">
@@ -1436,7 +1463,11 @@
                                                         <template #command>
                                                             <code>
                                                                 systemctl is-active
+<<<<<<< HEAD
                                                                 {{ monitor.system_service_name || "nginx" }}
+=======
+                                                                {{ monitor.config.systemServiceName || "nginx" }}
+>>>>>>> upstream/master
                                                             </code>
                                                         </template>
                                                     </i18n-t>
@@ -1452,7 +1483,11 @@
                                                             <code>
                                                                 (Get-Service -Name '{{
                                                                     (
+<<<<<<< HEAD
                                                                         monitor.system_service_name || "Dnscache"
+=======
+                                                                        monitor.config.systemServiceName || "Dnscache"
+>>>>>>> upstream/master
                                                                     ).replaceAll("'", "''")
                                                                 }}').Status
                                                             </code>
@@ -1486,7 +1521,11 @@
                                     <select
                                         v-if="pm2ProcessOptions.length > 0"
                                         id="pm2-process-name"
+<<<<<<< HEAD
                                         v-model="monitor.system_service_name"
+=======
+                                        v-model="monitor.config.systemServiceName"
+>>>>>>> upstream/master
                                         class="form-select mt-2"
                                         required
                                     >
@@ -1503,7 +1542,11 @@
                                     <input
                                         v-else
                                         id="pm2-process-name"
+<<<<<<< HEAD
                                         v-model="monitor.system_service_name"
+=======
+                                        v-model="monitor.config.systemServiceName"
+>>>>>>> upstream/master
                                         type="text"
                                         class="form-control mt-2"
                                         placeholder="api"
@@ -1516,7 +1559,11 @@
                                     <div class="form-text">
                                         {{
                                             $t("pm2Description", {
+<<<<<<< HEAD
                                                 service_name: monitor.system_service_name || "api",
+=======
+                                                service_name: monitor.config.systemServiceName || "api",
+>>>>>>> upstream/master
                                             })
                                         }}
                                         <div class="mt-2">
@@ -1770,8 +1817,11 @@
                                     monitor.type === 'http' ||
                                     monitor.type === 'keyword' ||
                                     monitor.type === 'json-query' ||
+<<<<<<< HEAD
                                     (monitor.type === 'port' &&
                                         ['starttls', 'secure'].includes(monitor.smtpSecurity)) ||
+=======
+>>>>>>> upstream/master
                                     (monitor.type === 'globalping' && monitor.subtype === 'http')
                                 "
                                 class="my-3 form-check"
@@ -3412,11 +3462,18 @@ const monitorDefaults = {
     rabbitmqUsername: "",
     rabbitmqPassword: "",
     conditions: [],
+<<<<<<< HEAD
     system_service_name: "",
+=======
+>>>>>>> upstream/master
     sshAuthMethod: "password",
     ntpStratumThreshold: 5,
     ntpTimeOffsetThreshold: 1000,
     ntpRootDispersionThreshold: 500,
+<<<<<<< HEAD
+=======
+    config: {},
+>>>>>>> upstream/master
 };
 
 export default {
@@ -3490,8 +3547,13 @@ export default {
             if (this.monitor.hostname) {
                 return this.monitor.hostname;
             }
+<<<<<<< HEAD
             if (this.monitor.system_service_name) {
                 return this.monitor.system_service_name;
+=======
+            if (this.monitor.config?.systemServiceName) {
+                return this.monitor.config.systemServiceName;
+>>>>>>> upstream/master
             }
             if (this.monitor.url) {
                 if (this.monitor.url !== "http://" && this.monitor.url !== "https://") {
@@ -4094,12 +4156,21 @@ message HealthCheckResponse {
 
                 const selectedProcess = this.pm2ProcessOptions.find(
                     (item) =>
+<<<<<<< HEAD
                         item.id === this.monitor.system_service_name || item.name === this.monitor.system_service_name
+=======
+                        item.id === this.monitor.config.systemServiceName ||
+                        item.name === this.monitor.config.systemServiceName
+>>>>>>> upstream/master
                 );
 
                 // Convert a legacy numeric id to the stable process name without replacing a missing saved target.
                 if (selectedProcess) {
+<<<<<<< HEAD
                     this.monitor.system_service_name = selectedProcess.name;
+=======
+                    this.monitor.config.systemServiceName = selectedProcess.name;
+>>>>>>> upstream/master
                 }
             });
         },
@@ -4421,8 +4492,13 @@ message HealthCheckResponse {
                 this.monitor.url = this.monitor.url.trim();
             }
 
+<<<<<<< HEAD
             if (["system-service", "pm2"].includes(this.monitor.type) && this.monitor.system_service_name) {
                 this.monitor.system_service_name = this.monitor.system_service_name.trim();
+=======
+            if (["system-service", "pm2"].includes(this.monitor.type) && this.monitor.config.systemServiceName) {
+                this.monitor.config.systemServiceName = this.monitor.config.systemServiceName.trim();
+>>>>>>> upstream/master
             }
 
             if (this.monitor.databaseConnectionString) {

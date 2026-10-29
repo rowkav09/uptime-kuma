@@ -149,6 +149,10 @@ export default {
                     this.clearKey = res.key;
                     this.keymodal.show();
                     this.clearForm();
+<<<<<<< HEAD
+=======
+                    this.$emit("keyAdded");
+>>>>>>> upstream/master
                 } else {
                     this.$root.toastError(res.msg);
                 }

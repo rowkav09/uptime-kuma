@@ -15,6 +15,7 @@
                     <label for="floatingInput">{{ $t("Username") }}</label>
                 </div>
 
+<<<<<<< HEAD
                 <div v-if="!tokenRequired" class="mt-3">
                     <HiddenInput
                         id="floatingPassword"
@@ -23,6 +24,19 @@
                         autocomplete="current-password"
                         :required="true"
                     />
+=======
+                <div v-if="!tokenRequired" class="form-floating mt-3">
+                    <input
+                        id="floatingPassword"
+                        v-model="password"
+                        type="password"
+                        class="form-control"
+                        placeholder="Password"
+                        autocomplete="current-password"
+                        required
+                    />
+                    <label for="floatingPassword">{{ $t("Password") }}</label>
+>>>>>>> upstream/master
                 </div>
 
                 <div v-if="tokenRequired">
@@ -71,12 +85,17 @@
 
 <script>
 import { login, verifyTotp } from "../auth-client";
+<<<<<<< HEAD
 import HiddenInput from "./HiddenInput.vue";
 
 export default {
     components: {
         HiddenInput,
     },
+=======
+
+export default {
+>>>>>>> upstream/master
     data() {
         return {
             processing: false,

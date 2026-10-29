@@ -4,8 +4,15 @@
  * DO NOT require("./server") in other modules, it likely creates circular dependency!
  */
 import { getRandomInt, isDevEnv, log, sleep } from "../src/util";
+<<<<<<< HEAD
 import { auth, doubleCheckPassword, getDisableAuthSession, getSession } from "./better-auth";
 import { createBetterAuthRouter, needSetup } from "./routers/better-auth-router";
+=======
+import { auth, createHeaders, doubleCheckPassword, getDisableAuthSession, getSessionFromHeaders } from "./better-auth";
+import { createBetterAuthRouter, needSetup } from "./routers/better-auth-router";
+import { readApiKey } from "./auth";
+import { initAdminFromEnv } from "./initial-admin";
+>>>>>>> upstream/master
 import { betterAuthSocketHandler } from "./socket-handlers/better-auth-socket-handler";
 import { loadEnvFile } from "node:process";
 import * as fs from "node:fs";
@@ -107,8 +114,11 @@ log.debug("server", "Importing redbean-node");
 const { R } = require("redbean-node");
 log.debug("server", "Importing http-graceful-shutdown");
 const gracefulShutdown = require("http-graceful-shutdown");
+<<<<<<< HEAD
 log.debug("server", "Importing prometheus-api-metrics");
 const prometheusAPIMetrics = require("prometheus-api-metrics");
+=======
+>>>>>>> upstream/master
 
 const { UptimeKumaServer } = require("./uptime-kuma-server");
 const server = UptimeKumaServer.getInstance();
@@ -140,9 +150,25 @@ const Database = require("./database");
 
 log.debug("server", "Importing Background Jobs");
 const { initBackgroundJobs, stopBackgroundJobs } = require("./jobs");
+<<<<<<< HEAD
 const { apiAuth } = require("./auth");
 const { Prometheus } = require("./prometheus");
 const { UptimeCalculator } = require("./uptime-calculator");
+=======
+const { DeferredListsSender } = require("./login-lists");
+const { chunk, firstBeatDelayMs } = require("./start-monitors");
+const { startStatsRefresh } = require("./stats-refresh");
+const { apiAuth } = require("./auth");
+const {
+    Prometheus,
+    startPrometheusMetrics,
+    getPrometheusAPIMiddleware,
+    stopPrometheusMetrics,
+} = require("./prometheus");
+const { UptimeCalculator } = require("./uptime-calculator");
+const { MonitorStats } = require("./monitor-stats");
+const { socketRoom } = require("./heartbeat-emit");
+>>>>>>> upstream/master
 
 const hostname = config.hostname;
 
@@ -166,10 +192,18 @@ const testMode = !!args["test"] || false;
 const {
     sendNotificationList,
     sendHeartbeatList,
+<<<<<<< HEAD
     sendInfo,
     sendProxyList,
     sendDockerHostList,
     sendAPIKeyList,
+=======
+    sendHeartbeatLists,
+    getHeartbeatHistory,
+    sendInfo,
+    sendProxyList,
+    sendDockerHostList,
+>>>>>>> upstream/master
     sendRemoteBrowserList,
     sendMonitorTypeList,
 } = require("./client");
@@ -227,6 +261,17 @@ app.use(function (req, res, next) {
     // Init Better Auth
     auth();
 
+<<<<<<< HEAD
+=======
+    // Create the initial admin user from env, only when the database has no user yet
+    try {
+        await initAdminFromEnv();
+    } catch (e) {
+        log.error("auth", "Failed to create the initial admin user: " + e.message);
+        process.exit(1);
+    }
+
+>>>>>>> upstream/master
     // Database should be ready now
     await server.initAfterDatabaseReady();
     server.entryPage = await Settings.get("entryPage");
@@ -330,9 +375,29 @@ app.use(function (req, res, next) {
 
     // Basic Auth Router here
 
+<<<<<<< HEAD
     // Prometheus API metrics  /metrics
     // With Basic Auth using the first user's username/password
     app.get("/metrics", apiAuth, prometheusAPIMetrics());
+=======
+    // Prometheus API  /metrics  (Basic Auth, only when enabled in the settings)
+    app.get(
+        "/metrics",
+        async (req, res, next) => {
+            try {
+                if ((await setting("prometheusApiEnabled")) !== true) {
+                    res.sendStatus(404);
+                    return;
+                }
+                next();
+            } catch (e) {
+                next(e);
+            }
+        },
+        apiAuth,
+        (req, res, next) => getPrometheusAPIMiddleware()(req, res, next)
+    );
+>>>>>>> upstream/master
 
     app.use(
         "/",
@@ -352,6 +417,13 @@ app.use(function (req, res, next) {
     const apiRouter = require("./routers/api-router");
     app.use(apiRouter);
 
+<<<<<<< HEAD
+=======
+    // MCP Router, a TypeScript module, so `require` hands back its namespace
+    const mcpRouter = require("./routers/mcp-router").default;
+    app.use(mcpRouter);
+
+>>>>>>> upstream/master
     // Status Page Router
     const statusPageRouter = require("./routers/status-page-router");
     app.use(statusPageRouter);
@@ -381,7 +453,18 @@ app.use(function (req, res, next) {
         let session;
 
         if (!(await Settings.get("disableAuth"))) {
+<<<<<<< HEAD
             session = await getSession(socket.request.headers.cookie);
+=======
+            let apiKey;
+
+            // API keys only work as a socket login when the API & MCP is enabled
+            if (await Settings.get("apiEnabled")) {
+                apiKey = readApiKey(socket.request.headers.authorization);
+            }
+
+            session = await getSessionFromHeaders(socket.request.headers.cookie, apiKey);
+>>>>>>> upstream/master
         } else {
             session = await getDisableAuthSession();
         }
@@ -389,6 +472,10 @@ app.use(function (req, res, next) {
         if (session) {
             socket.userID = session.user.id;
             socket.session = session;
+<<<<<<< HEAD
+=======
+            socket.headers = createHeaders(socket.request.headers.cookie);
+>>>>>>> upstream/master
             socket.emit("session", session.user.username);
             log.debug("auth", `Session active:`, session.session.ipAddress, session.user.username);
         }
@@ -420,6 +507,13 @@ app.use(function (req, res, next) {
 
                 monitor.rabbitmqNodes = JSON.stringify(monitor.rabbitmqNodes);
 
+<<<<<<< HEAD
+=======
+                // Config is never imported as a whole, only its known keys are copied
+                const clientConfig = monitor.config;
+                delete monitor.config;
+
+>>>>>>> upstream/master
                 /*
                  * List of frontend-only properties that should not be saved to the database.
                  * Should clean up before saving to the database.
@@ -436,6 +530,10 @@ app.use(function (req, res, next) {
                 }
 
                 bean.import(monitor);
+<<<<<<< HEAD
+=======
+                bean.applyClientConfig(clientConfig);
+>>>>>>> upstream/master
                 // Map camelCase frontend property to snake_case database column
                 if (monitor.retryOnlyOnStatusCodeFailure !== undefined) {
                     bean.retry_only_on_status_code_failure = monitor.retryOnlyOnStatusCodeFailure;
@@ -604,8 +702,15 @@ app.use(function (req, res, next) {
                 bean.rabbitmqPassword = monitor.rabbitmqPassword;
                 bean.conditions = JSON.stringify(monitor.conditions);
                 bean.manual_status = monitor.manual_status;
+<<<<<<< HEAD
                 bean.system_service_name = monitor.system_service_name;
                 bean.expected_tls_alert = monitor.expectedTlsAlert;
+=======
+
+                // Known config keys only, so a payload never replaces the whole config
+                bean.applyClientConfig(monitor.config);
+
+>>>>>>> upstream/master
                 bean.sshUsername = monitor.sshUsername;
                 bean.sshPassword = monitor.sshPassword;
                 bean.sftpPath = monitor.sftpPath;
@@ -710,6 +815,27 @@ app.use(function (req, res, next) {
             }
         });
 
+<<<<<<< HEAD
+=======
+        socket.on("getHeartbeatHistory", async (monitorID, callback) => {
+            try {
+                checkLogin(socket);
+                const data = await getHeartbeatHistory(monitorID);
+                log.debug("monitor", `History request #${monitorID} rows=${data.length}`);
+                callback({
+                    ok: true,
+                    data,
+                });
+            } catch (e) {
+                log.warn("monitor", `History request #${monitorID} failed: ${e.message}`);
+                callback({
+                    ok: false,
+                    msg: e.message,
+                });
+            }
+        });
+
+>>>>>>> upstream/master
         socket.on("getMonitorBeats", async (monitorID, period, callback) => {
             try {
                 checkLogin(socket);
@@ -1146,10 +1272,26 @@ app.use(function (req, res, next) {
 
                 const previousChromeExecutable = await Settings.get("chromeExecutable");
                 const previousNSCDStatus = await Settings.get("nscd");
+<<<<<<< HEAD
+=======
+                const previousPrometheusApiEnabled = await Settings.get("prometheusApiEnabled");
+>>>>>>> upstream/master
 
                 await setSettings("general", data);
                 server.entryPage = data.entryPage;
 
+<<<<<<< HEAD
+=======
+                // Start or stop the Prometheus sampling when the API is toggled
+                if (previousPrometheusApiEnabled !== data.prometheusApiEnabled) {
+                    if (data.prometheusApiEnabled) {
+                        startPrometheusMetrics();
+                    } else {
+                        stopPrometheusMetrics();
+                    }
+                }
+
+>>>>>>> upstream/master
                 // Also need to apply timezone globally
                 if (data.serverTimezone) {
                     await server.setTimezone(data.serverTimezone);
@@ -1400,6 +1542,20 @@ app.use(function (req, res, next) {
 
         await startMonitors();
 
+<<<<<<< HEAD
+=======
+        // Warm the dashboard/prometheus stats cache once, then refresh it periodically.
+        // Without this, every beat would load years of stat rows per monitor.
+        const statMonitorIDs = Object.keys(server.monitorList);
+        if (statMonitorIDs.length > 0) {
+            startStatsRefresh({
+                monitorIDs: statMonitorIDs,
+                refresh: (ids) => MonitorStats.refresh(ids),
+                onError: (e) => log.error("monitor", "Failed to refresh monitor stats: " + e.message),
+            });
+        }
+
+>>>>>>> upstream/master
         // Put this here. Start background jobs after the db and server is ready to prevent clear up during db migration.
         await initBackgroundJobs();
 
@@ -1440,20 +1596,33 @@ async function updateMonitorNotification(monitorID, notificationIDList) {
 async function afterLogin(socket, user) {
     socket.userID = user.id;
     socket.join(user.id);
+<<<<<<< HEAD
 
     let monitorList = await server.sendMonitorList(socket);
+=======
+    socket.join(socketRoom);
+
+    let tPerf = Date.now();
+    let monitorList = await server.sendMonitorList(socket);
+    log.debug("perf", `[login] sendMonitorList ${Date.now() - tPerf}ms`);
+    tPerf = Date.now();
+>>>>>>> upstream/master
     await Promise.allSettled([
         sendInfo(socket),
         server.sendMaintenanceList(socket),
         sendNotificationList(socket),
         sendProxyList(socket),
         sendDockerHostList(socket),
+<<<<<<< HEAD
         sendAPIKeyList(socket),
+=======
+>>>>>>> upstream/master
         sendRemoteBrowserList(socket),
         sendMonitorTypeList(socket),
     ]);
 
     await StatusPage.sendStatusPageList(io, socket);
+<<<<<<< HEAD
 
     const monitorPromises = [];
     for (let monitorID in monitorList) {
@@ -1462,6 +1631,38 @@ async function afterLogin(socket, user) {
     }
 
     await Promise.all(monitorPromises);
+=======
+    log.debug("perf", `[login] misc lists ${Date.now() - tPerf}ms`);
+    tPerf = Date.now();
+
+    const monitorIDs = Object.keys(monitorList);
+
+    // The heartbeat and stats lists are another ~1.2 MB with thousands of monitors.
+    // Send them only after the client has painted the monitor list, so the dashboard
+    // becomes usable immediately instead of waiting for all three payloads.
+    const sendDeferredLists = async () => {
+        let t = Date.now();
+        // One event with every monitor's recent heartbeats, instead of one query + event per monitor
+        await sendHeartbeatLists(socket, monitorIDs);
+        log.debug("perf", `[login] heartbeatLists ${Date.now() - t}ms`);
+        t = Date.now();
+        // Serve the dashboard numbers from the cache. On a cold cache join the in-flight
+        // aggregate scan instead of showing empty numbers; this runs after first paint.
+        let stats = MonitorStats.getCached(monitorIDs);
+        if (Object.keys(stats).length < monitorIDs.length) {
+            stats = await MonitorStats.refresh(monitorIDs);
+        }
+        io.to(socket.userID).emit("stats", stats);
+        MonitorStats.maybeRefresh(io, monitorIDs);
+        log.debug("perf", `[login] stats ${Date.now() - t}ms`);
+    };
+    const deferredLists = new DeferredListsSender({
+        send: sendDeferredLists,
+        onError: (e) => log.error("monitor", "Failed to send dashboard lists: " + e.message),
+    });
+    socket.once("dashboardRendered", deferredLists.onRendered);
+    socket.once("disconnect", () => deferredLists.dispose());
+>>>>>>> upstream/master
 
     // Set server timezone from client browser if not set
     // It should be run once only
@@ -1545,6 +1746,7 @@ async function startMonitors() {
         server.monitorList[monitor.id] = monitor;
     }
 
+<<<<<<< HEAD
     for (let monitor of list) {
         try {
             await monitor.start(io);
@@ -1553,6 +1755,20 @@ async function startMonitors() {
         }
         // Give some delays, so all monitors won't make request at the same moment when just start the server.
         await sleep(getRandomInt(300, 1000));
+=======
+    // Start every monitor in small concurrent batches, but spread their first check
+    // over the interval, so 5000 monitors do not all check at the same second
+    for (const batch of chunk(list, 50)) {
+        await Promise.allSettled(
+            batch.map(async (monitor) => {
+                try {
+                    await monitor.start(io, firstBeatDelayMs(monitor.interval));
+                } catch (e) {
+                    log.error("monitor", e);
+                }
+            })
+        );
+>>>>>>> upstream/master
     }
 }
 

@@ -36,6 +36,7 @@ exports.up = async function (knex) {
                 t.dropForeign("user_id");
             });
         } catch (error) {
+<<<<<<< HEAD
             // Not sure why it only happens on Ubuntu 22.04 + Node.js 26
             // Error: Can't DROP 'docker_host_user_id_foreign'; check that column/key exists
             console.error(`Error dropping foreign key for table ${table.name}:`, error);
@@ -45,6 +46,10 @@ exports.up = async function (knex) {
 
             // Try to ignore it, because the foreign key not existing, we can just drop user_id
             // throw error;
+=======
+            // MySQL ignores the inline REFERENCES in the legacy patch SQL, so there is no constraint to drop
+            console.warn(`Warning: MySQL has no foreign key to drop on ${table.name}.user_id (${error.message})`);
+>>>>>>> upstream/master
         }
 
         await knex.schema.alterTable(table.name, (t) => {

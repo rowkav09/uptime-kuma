@@ -8,6 +8,11 @@ on:
   schedule:
     - cron: "16 22 * * 0"
 
+<<<<<<< HEAD
+=======
+permissions: {}
+
+>>>>>>> upstream/master
 jobs:
   analyze:
     # Only run scheduled analysis on the original repository, not on forks

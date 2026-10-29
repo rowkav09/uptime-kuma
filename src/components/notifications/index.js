@@ -70,6 +70,10 @@ import Squadcast from "./Squadcast.vue";
 import SMSEagle from "./SMSEagle.vue";
 import Stackfield from "./Stackfield.vue";
 import STMP from "./SMTP.vue";
+<<<<<<< HEAD
+=======
+import MicrosoftGraph from "./MicrosoftGraph.vue";
+>>>>>>> upstream/master
 import Teams from "./Teams.vue";
 import TechulusPush from "./TechulusPush.vue";
 import Telegram from "./Telegram.vue";
@@ -185,6 +189,10 @@ const NotificationFormList = {
     squadcast: Squadcast,
     SMSEagle: SMSEagle,
     smtp: STMP,
+<<<<<<< HEAD
+=======
+    MicrosoftGraph: MicrosoftGraph,
+>>>>>>> upstream/master
     stackfield: Stackfield,
     teams: Teams,
     telegram: Telegram,

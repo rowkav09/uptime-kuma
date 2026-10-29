@@ -1,2 +1,7 @@
 # language files
 src/lang/*.json
+<<<<<<< HEAD
+=======
+# vendored, kept close to upstream
+server/modules
+>>>>>>> upstream/master

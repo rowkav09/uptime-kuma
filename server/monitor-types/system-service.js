@@ -10,12 +10,20 @@ class SystemServiceMonitorType extends MonitorType {
     /**
      * Check the system service status.
      * Detects OS and dispatches to the appropriate check method.
+<<<<<<< HEAD
      * @param {object} monitor The monitor object containing monitor.system_service_name.
+=======
+     * @param {object} monitor The monitor object containing the service name in its config.
+>>>>>>> upstream/master
      * @param {object} heartbeat The heartbeat object to update.
      * @returns {Promise<void>} Resolves when check is complete.
      */
     async check(monitor, heartbeat) {
+<<<<<<< HEAD
         const serviceName = (monitor.system_service_name || "").trim();
+=======
+        const serviceName = (monitor.getConfigValue("systemServiceName") || "").trim();
+>>>>>>> upstream/master
 
         if (!serviceName) {
             throw new Error("Service Name is required.");

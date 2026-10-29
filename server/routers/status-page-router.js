@@ -97,6 +97,10 @@ router.get("/api/status-page/heartbeat/:slug", cache("1 minutes"), async (reques
             heartbeatList[monitorID] = list.reverse().map((row) => row.toPublicJSON());
 
             const uptimeCalculator = await UptimeCalculator.getUptimeCalculator(monitorID);
+<<<<<<< HEAD
+=======
+            await uptimeCalculator.ensureHistoryLoaded();
+>>>>>>> upstream/master
             uptimeList[`${monitorID}_24`] = uptimeCalculator.get24Hour().uptime;
         }
 

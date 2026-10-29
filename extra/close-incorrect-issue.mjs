@@ -2,9 +2,15 @@ import * as github from "@actions/github";
 
 (async () => {
     try {
+<<<<<<< HEAD
         const token = process.argv[2];
         const issueNumber = process.argv[3];
         const username = process.argv[4];
+=======
+        const token = process.env.GITHUB_TOKEN;
+        const issueNumber = process.env.ISSUE_NUMBER;
+        const username = process.env.ISSUE_USER_LOGIN;
+>>>>>>> upstream/master
 
         const client = github.getOctokit(token).rest;
 
